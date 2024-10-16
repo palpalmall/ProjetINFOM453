@@ -11,27 +11,59 @@
 #include <Wire.h>
  
 // LED on pin 6
-const int ledPin = 6;
+const int ledPin = 6; // onboard led
+const int redLEDPin = 1;
+const int yellowLEDPin = 7;
  
 void setup() {
-
+  Serial.begin(9600);
   // Join I2C bus as slave with address 8
   Wire.begin(0x8);
   
   // Call receiveEvent when data received                
   Wire.onReceive(receiveEvent);
   
-  // Setup pin 13 as output and turn LED off
+  // Setup pin 6 as output and turn LED off
   pinMode(ledPin, OUTPUT);
+  pinMode(redLEDPin, OUTPUT);
+  pinMode(yellowLEDPin, OUTPUT);
   digitalWrite(ledPin, LOW);
+  digitalWrite(redLEDPin, LOW);
+  digitalWrite(yellowLEDPin, LOW);
 }
  
 // Function that executes whenever data is received from master
 void receiveEvent(int howMany) {
-  while (Wire.available()) { // loop through all but the last
-    char c = Wire.read(); // receive byte as a character
-    digitalWrite(ledPin, c);
+
+  digitalWrite(redLEDPin, LOW);
+  digitalWrite(yellowLEDPin, LOW);
+
+  int offset = Wire.read(); // je ne sais pas a quoi sert l'offset qu'il faut envoyer
+  int action = Wire.read(); // read the first byte to know the action needed to be done
+  Serial.print("action= "); Serial.print(action);
+  Serial.print("\n");
+  switch(action){
+
+    case 0 : // status LED action
+      if(Wire.read() == 0){
+        digitalWrite(redLEDPin, HIGH);
+        digitalWrite(yellowLEDPin, LOW);
+      }else{
+        digitalWrite(redLEDPin, LOW);
+        digitalWrite(yellowLEDPin, HIGH);
+      }
+      break;
+
+    case 1 : // onboard LED action
+      char c = Wire.read(); // receive byte as a character
+      digitalWrite(ledPin, c);
+      break;
   }
+
+  // while (Wire.available()) { // loop through all
+  //   char c = Wire.read(); // receive byte as a character
+  //   digitalWrite(ledPin, c);
+  // }
 }
 
 void loop() {
