@@ -9,11 +9,16 @@
  
 // Include the Wire library for I2C
 #include <Wire.h>
+#include <Servo.h>
  
 // LED on pin 6
 const int ledPin = 6; // onboard led
 const int redLEDPin = 1;
 const int yellowLEDPin = 7;
+
+Servo myservo;
+const int servoPin = 5;
+int pos = 0;
  
 void setup() {
   Serial.begin(9600);
@@ -22,6 +27,9 @@ void setup() {
   
   // Call receiveEvent when data received                
   Wire.onReceive(receiveEvent);
+
+  // Call receiveEvent when data received                
+  Wire.onRequest(requestEvent);
   
   // Setup pin 6 as output and turn LED off
   pinMode(ledPin, OUTPUT);
@@ -30,40 +38,85 @@ void setup() {
   digitalWrite(ledPin, LOW);
   digitalWrite(redLEDPin, LOW);
   digitalWrite(yellowLEDPin, LOW);
+
+  myservo.attach(servoPin);
+  myservo.write(0);
 }
  
 // Function that executes whenever data is received from master
 void receiveEvent(int howMany) {
-
+  if (Wire.available()>0){
   digitalWrite(redLEDPin, LOW);
   digitalWrite(yellowLEDPin, LOW);
 
-  int offset = Wire.read(); // je ne sais pas a quoi sert l'offset qu'il faut envoyer
+  // on recoit dans l'ordre : [action, data=optional]
   int action = Wire.read(); // read the first byte to know the action needed to be done
-  Serial.print("action= "); Serial.print(action);
-  Serial.print("\n");
+  print("action = ", action);
+
   switch(action){
 
-    case 0 : // status LED action
-      if(Wire.read() == 0){
+    case 0 :{ // status LED action
+      int data = Wire.read(); // n'en a que si on recoit un write et pas un read
+      if(data == 0){ // status = absent donc lumiere rouge
         digitalWrite(redLEDPin, HIGH);
         digitalWrite(yellowLEDPin, LOW);
       }else{
         digitalWrite(redLEDPin, LOW);
         digitalWrite(yellowLEDPin, HIGH);
       }
-      break;
+      break;}
 
-    case 1 : // onboard LED action
-      char c = Wire.read(); // receive byte as a character
-      digitalWrite(ledPin, c);
+    case 1 :{ // onboard LED action (WRITE)
+      int data = Wire.read(); // n'en a que si on recoit un write et pas un read
+      print("data = ", data);
+      digitalWrite(ledPin, data);
+      break;}
+    
+    //  case 2 :{ // send if the head has been smashed or not (READ)
+    //   Wire.write(true);
+    //   break;}
+    // JE NE COMPREND PAS PQ CA ENVOIE BIEN TRUE QUE QUAND CA VIENT DE ONREQUEST ET PAS ONRECEIVE
+
+    case 4 :{
+      int data = Wire.read();
+      testServo();
       break;
+    }
+    }
   }
 
-  // while (Wire.available()) { // loop through all
-  //   char c = Wire.read(); // receive byte as a character
-  //   digitalWrite(ledPin, c);
-  // }
+}
+
+void requestEvent(){
+  
+  int request = Wire.read(); // read the first byte to know the action needed to be done
+  print("request = ", request);
+
+  if(request == 3){
+    Wire.write("hello");  
+  }
+  else{
+    //request = 2
+    Wire.write(true);         // respond with message of 6 bytes as expected by master
+  }
+}
+
+void testServo(){
+  for (pos = 0; pos <= 180; pos += 1) { // goes from 0 degrees to 180 degrees
+    // in steps of 1 degree
+    myservo.write(pos);              // tell servo to go to position in variable 'pos'
+    delay(5);                       // waits 15ms for the servo to reach the position
+  }
+  for (pos = 180; pos >= 0; pos -= 1) { // goes from 180 degrees to 0 degrees
+    myservo.write(pos);              // tell servo to go to position in variable 'pos'
+    delay(5);                       // waits 15ms for the servo to reach the position
+  }
+}
+
+
+void print(String text,int data){
+  Serial.print(text);Serial.print(data);
+  Serial.print("\n");
 }
 
 void loop() {
