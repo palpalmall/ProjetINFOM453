@@ -13,8 +13,8 @@
  
 // LED on pin 6
 const int ledPin = 6; // onboard led
-const int redLEDPin = 1;
-const int yellowLEDPin = 7;
+const int redLEDPin = 1; //normal pin (not analog nor pwm)
+const int yellowLEDPin = 7; //normal pin (not analog nor pwm)
 
 Servo myservo;
 const int servoPin = 5;
