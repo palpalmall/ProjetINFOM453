@@ -12,15 +12,15 @@
 #include <Servo.h>
 
 // LED on pin 13
-const int ledPin = 13; // onboard pin
-const int REDPin = 3;
-const int GREENPin = 5;
-const int BLUEPin = 6;
+const int ledPin = 6; // onboard pin
+const int REDPin = 4; //PWM PIN
+const int GREENPin = 3; //PWM PIN
+const int BLUEPin = 2; //PWM PIN
 const bool teteFrappe = true;
 const int analogPin = 0;
 
 Servo myservo;
-const int servoPin = 9;
+const int servoPin = 5; // PWM PIN
 int pos = 0;
  
 void setup() {
