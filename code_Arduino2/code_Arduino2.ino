@@ -42,9 +42,7 @@ void setup() {
   pinMode(GREENPin, OUTPUT);
   pinMode(BLUEPin, OUTPUT);
   // on eteind les pins RGB
-  digitalWrite(REDPin, LOW);
-  digitalWrite(GREENPin, LOW);
-  digitalWrite(BLUEPin, LOW);
+  shutDownRGBLED();
 
   myservo.attach(servoPin);
   myservo.write(0);
@@ -53,54 +51,60 @@ void setup() {
 // Function that executes whenever data is received from master
 void receiveEvent(int howMany) {
   if (Wire.available() > 0){
-  digitalWrite(REDPin, LOW);
-  digitalWrite(GREENPin, LOW);
-  digitalWrite(BLUEPin, LOW);
-  
-  // on recoit dans l'ordre : [action, data=optional]
-  int action = Wire.read(); // read the first byte to know the action needed to be done
-  print("action = ", action);
+    shutDownRGBLED();
 
-  switch(action){
-    
-    case 0 :{ // status LED action (WRITE)
-      int data = Wire.read(); // n'en a que si on recoit un write et pas un read
-      if(data == 0){ // status = absent donc lumiere rouge
-        analogWrite(REDPin, 255);
-        digitalWrite(GREENPin, LOW);
-        digitalWrite(BLUEPin, LOW);
-      }else{ // status = present donc lumiere verte
-        analogWrite(GREENPin, 255);
-        digitalWrite(REDPin, LOW);
-        digitalWrite(BLUEPin, LOW);
-      }
-      break;}
+    // on recoit dans l'ordre : [action, data=optional]
+    int action = Wire.read(); // read the first byte to know the action needed to be done
+    print("action = ", action);
 
-    case 1 :{ // onboard LED action (WRITE)
-      int data = Wire.read(); // n'en a que si on recoit un write et pas un read
-      print("data = ", data);
-      digitalWrite(ledPin, data);
-      break;}
-    
-    // case 2 :{ // send if the head has been smashed or not (READ)
-    //   int data = Wire.read();
-    //   print("in it = ", data);
-    //   Wire.write(true);
-    //   break;}
-    // JE NE COMPREND PAS PQ CA ENVOIE BIEN TRUE QUE QUAND CA VIENT DE ONREQUEST ET PAS ONRECEIVE
+    switch(action){
+
+      case 0 :{ // status LED action (WRITE)
+        int data = Wire.read(); // n'en a que si on recoit un write et pas un read
+        print("data = ", data);
+        if(data == 0){ // status = absent donc lumiere rouge
+          analogWrite(REDPin, 255);
+          digitalWrite(GREENPin, LOW);
+          digitalWrite(BLUEPin, LOW);
+        }else{ // status = present donc lumiere verte
+          analogWrite(GREENPin, 255);
+          digitalWrite(REDPin, LOW);
+          digitalWrite(BLUEPin, LOW);
+        }
+        break;}
+
+      case 1 :{ // onboard LED action (WRITE)
+        int data = Wire.read(); // n'en a que si on recoit un write et pas un read
+        print("data = ", data);
+        digitalWrite(ledPin, data);
+        break;}
+
     }
   }
-
 }
 
-void requestEvent(){
+void requestEvent(){ // launched when master makes a read (request)
   
   int request = Wire.read(); // read the first byte to know the action needed to be done
-  // request vaut tjrs -1 alors que sur le MKR1000, on recoit bien la valeur envoyé par le master
-  Serial.print("request= "); Serial.print(request);
-  Serial.print("\n");
-  Wire.write(true);         // respond with message of 6 bytes as expected by master
-  
+  print("request = ", request);
+
+  switch(request){
+    case 2:{
+      Wire.write(true);
+      break;
+    }
+
+    case 3:{
+      Wire.write("hello");
+      break;
+    }
+  }
+}
+
+void shutDownRGBLED(){ // shut down rgb LED
+  analogWrite(REDPin, LOW);
+  analogWrite(GREENPin, LOW);
+  analogWrite(BLUEPin, LOW);
 }
 
 void print(String text,int data){

@@ -35,7 +35,8 @@ void setup() {
   pinMode(ledPin, OUTPUT);
   pinMode(redLEDPin, OUTPUT);
   pinMode(yellowLEDPin, OUTPUT);
-  digitalWrite(ledPin, LOW);
+  digitalWrite(ledPin, LOW); //on eteind la onboard led
+  //on eteind les led rouge et jaune
   digitalWrite(redLEDPin, LOW);
   digitalWrite(yellowLEDPin, LOW);
 
@@ -46,45 +47,39 @@ void setup() {
 // Function that executes whenever data is received from master
 void receiveEvent(int howMany) {
   if (Wire.available()>0){
-  digitalWrite(redLEDPin, LOW);
-  digitalWrite(yellowLEDPin, LOW);
+    digitalWrite(redLEDPin, LOW);
+    digitalWrite(yellowLEDPin, LOW);
 
-  // on recoit dans l'ordre : [action, data=optional]
-  int action = Wire.read(); // read the first byte to know the action needed to be done
-  print("action = ", action);
+    // on recoit dans l'ordre : [action, data=optional]
+    int action = Wire.read(); // read the first byte to know the action needed to be done
+    print("action = ", action);
 
-  switch(action){
+    switch(action){
 
-    case 0 :{ // status LED action
-      int data = Wire.read(); // n'en a que si on recoit un write et pas un read
-      if(data == 0){ // status = absent donc lumiere rouge
-        digitalWrite(redLEDPin, HIGH);
-        digitalWrite(yellowLEDPin, LOW);
-      }else{
-        digitalWrite(redLEDPin, LOW);
-        digitalWrite(yellowLEDPin, HIGH);
-      }
-      break;}
+      case 0 :{ // status LED action
+        int data = Wire.read(); // n'en a que si on recoit un write et pas un read
+        if(data == 0){ // status = absent donc lumiere rouge
+          digitalWrite(redLEDPin, HIGH);
+          digitalWrite(yellowLEDPin, LOW);
+        }else{
+          digitalWrite(redLEDPin, LOW);
+          digitalWrite(yellowLEDPin, HIGH);
+        }
+        break;}
 
-    case 1 :{ // onboard LED action (WRITE)
-      int data = Wire.read(); // n'en a que si on recoit un write et pas un read
-      print("data = ", data);
-      digitalWrite(ledPin, data);
-      break;}
-    
-    //  case 2 :{ // send if the head has been smashed or not (READ)
-    //   Wire.write(true);
-    //   break;}
-    // JE NE COMPREND PAS PQ CA ENVOIE BIEN TRUE QUE QUAND CA VIENT DE ONREQUEST ET PAS ONRECEIVE
+      case 1 :{ // onboard LED action (WRITE)
+        int data = Wire.read(); // n'en a que si on recoit un write et pas un read
+        print("data = ", data);
+        digitalWrite(ledPin, data);
+        break;}
 
-    case 4 :{
-      int data = Wire.read();
-      testServo();
-      break;
-    }
+      case 4 :{
+        int data = Wire.read();
+        testServo();
+        break;}
+
     }
   }
-
 }
 
 void requestEvent(){
@@ -92,12 +87,16 @@ void requestEvent(){
   int request = Wire.read(); // read the first byte to know the action needed to be done
   print("request = ", request);
 
-  if(request == 3){
-    Wire.write("hello");  
-  }
-  else{
-    //request = 2
-    Wire.write(true);         // respond with message of 6 bytes as expected by master
+  switch(request){
+    case 2:{
+      Wire.write(true);
+      break;
+    }
+
+    case 3:{
+      Wire.write("hello");
+      break;
+    }
   }
 }
 
