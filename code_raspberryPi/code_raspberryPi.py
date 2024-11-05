@@ -5,19 +5,22 @@
 #  DroneBot Workshop 2019
 #  https://dronebotworkshop.com
 import time
-import RPi.GPIO as GPIO
-GPIO.setmode(GPIO.BOARD)
-
-GPIO.setup(11, GPIO.IN) #SW = button ?
-GPIO.setup(13, GPIO.IN) #Y
-GPIO.setup(15, GPIO.IN) #X
 
 #Je propose que l'on fonctionne par numero d'action, ici :
-# write_i2c_block_data( adresse arduino, action ()le numero lier a l'action que l'on demande), ...data for action]) 
+# write_i2c_block_data( adresse arduino, action (le numero lier a l'action que l'on demande), ...data for action]) 
 # action nbr 0 = status (absent/present)
 # action nbr 1 = LED onboard
 # action nbr 2 = smashed head
 # action nbr 3 = text
+# action nbr 4 = servo motor
+
+#Lorsque vous lancez le code python, l'on vous demande un chiffre : 
+# tapez 0 => action nbr 1 (eteind LED onboard)
+# tapez 1 => action nbr 1 (allume LED onboard)
+# tapez 2 => action nbr 3 (recoit du txt)
+# tapez 3 => action nbr 0 (allume LED status)
+# tapez 4 => action nbr 2 (demande si la tete a été frappée)
+# tapez 5 => action nbr 4 (demarre le servo motor) 
 
 #Nom des figurines et leurs adresses arduino
 NamesAddrDico = {
@@ -29,7 +32,7 @@ NamesAddrDico = {
 #Noms des figurines et leur status (false = absent, true = present)
 exempleStatusReceived = {
 	"Josephine" : True,
-	"Richard" : True
+	"Richard" : False
 }
 
 # envoit aux arduinos la valeur de status pour chaque figurine
@@ -67,14 +70,8 @@ numb = 1
 
 print ("Enter 1 for ON or 0 for OFF")
 while numb == 1:
-	
-	#print("GPIO 11",GPIO.input(11))
-	#print("GPIO 13",GPIO.input(13))
-	#print("GPIO 15",GPIO.input(15))
-	#time.sleep(2)
 
 	ledstate = input(">>>>   ")
-	#ledstate = 45
 
 	if ledstate == "1":# action nbr = 1
 		bus.write_i2c_block_data(addr1,1, [1]) # switch it on
@@ -90,7 +87,6 @@ while numb == 1:
 	elif ledstate == "4":
 		askForSmashedHead(NamesAddrDico)
 	elif ledstate == "5":
-		bus.write_i2c_block_data(addr1,4, [1]) # switch it on
+		bus.write_i2c_block_data(addr1,4, [1]) # switch servo motor on
 	else:
 		numb = 0
-		#lol = 0
