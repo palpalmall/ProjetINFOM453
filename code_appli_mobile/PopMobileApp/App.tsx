@@ -1,5 +1,6 @@
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import 'expo-dev-client';
 import Home from './app/screens/HomePage'
 import Configuration from './app/screens/ConfigurationPage'
 import Connection from './app/screens/ConnectionPage';

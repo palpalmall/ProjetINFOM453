@@ -19,7 +19,8 @@ function Home({navigation, route}: {navigation: any, route : any}){
       }
     }
 
-    checkIfConfigDone()
+    //checkIfConfigDone()
+    navigation.navigate('Configuration')
   },[])
 
   return(
