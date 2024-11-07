@@ -13,8 +13,10 @@ function Configuration(){
   const [nearbyPeripherals, setNearbyPeripherals] = useState<Map<string, Peripheral>>(new Map<string, Peripheral>())
   const [writtenDeviceId, setWrittenDeviceId] = useState("")
   const [configStep, setConfigStep] = useState("Step 1. Enable GPS")
-  const [stepExplanations, setStepExplanations] = useState("")
+  const [stepExplanations, setStepExplanations] = useState("Click on the button beneath to activate the location of your device")
   const [alertMessage, setAlertMessage] = useState("")
+  const wifiNameRef = useRef("")
+  const wifiPasswordRef = useRef("")
   const BleManagerModule = NativeModules.BleManager;
   const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
@@ -25,6 +27,7 @@ function Configuration(){
     if (result?.enabled) {
       //GPS enabled successfully, display next permission
       setConfigStep("Step 2. Accept permissions")
+      setStepExplanations("Click on the beneath button to accept the permissions to use the location and the bluetooth of your device")
       setAlertMessage("")// empty the alertMessage
     } else {
       //GPS couldn't be enabled. Show GPS modal warning
@@ -82,6 +85,7 @@ function Configuration(){
 
     if(GPSPerm && (BLEPerm == undefined || BLEPerm)){
       setConfigStep("Step 3. Enable bluetooth")
+      setStepExplanations("Click on the button to automatically turn on your device bluetooth")
       setAlertMessage("")// empty the alertMessage
     }else{
       setAlertMessage("One or more permissions has been denied, retry please")
@@ -209,6 +213,7 @@ function Configuration(){
     let BleEnabled = await BleManager.checkState() === BleState.On
     if(BleEnabled){
       setConfigStep("Step 4. Scan for Rak device")
+      setStepExplanations("Click on the beneath button to scan for the devices using bluetooth (BLE) arond you")
       setAlertMessage("") // empty the alertMessage
     }else{
       setAlertMessage("Bluetooth could not be enabled, please turn it on")
@@ -247,6 +252,7 @@ function Configuration(){
               listener.remove();
             }
             setConfigStep("Step 5. Connect to the Rak");
+            setStepExplanations("Write the name of the Rak in the field beneath and then click on the connect to 'name of the rak' button")
             setAlertMessage("") // empty the alertMessage
             resolve(devicesMap);
       };
@@ -378,8 +384,7 @@ function Configuration(){
           });
 
           setConfigStep("Step 6. Send the wifi's name and password")
-          await BleManager.writeWithoutResponse(connectedDeviceId.current, "FFF0", "FFF3", [...Buffer.from("wifiName", "utf-8")])
-          await BleManager.writeWithoutResponse(connectedDeviceId.current, "FFF0", "FFF4", [...Buffer.from("wifiPassword", "utf-8")])
+          setStepExplanations("Write down into the beneath fields the name of your wifi and the password before sending them to the Rak")
 
           let disconnectListener = bleManagerEmitter.addListener('BleManagerDisconnectPeripheral',async () => {
             //addd the code to execute after hardware disconnects.
@@ -390,8 +395,13 @@ function Configuration(){
           });
 
         return resolve(isConnected);
-    }})
-  };
+      }})
+    };
+
+  const sendDataToRpi = async (wifiName : string, wifiPassword : string) => {
+    await BleManager.writeWithoutResponse(connectedDeviceId.current, "FFF0", "FFF3", [...Buffer.from(wifiName, "utf-8")])
+    await BleManager.writeWithoutResponse(connectedDeviceId.current, "FFF0", "FFF4", [...Buffer.from(wifiPassword, "utf-8")])
+  }
 
   useEffect(() => {
     async function sayConfigDone(){
@@ -408,8 +418,9 @@ function Configuration(){
       </View>
       <SafeAreaView style={styles.container}>
 
-        <Text>{configStep}</Text>
-        <Text>{alertMessage}</Text>
+        <Text style={styles.sectionTitle}>{configStep}</Text>
+        <Text style={styles.stepExplanationText}>{stepExplanations}</Text>
+        {alertMessage.length > 0 && <Text style={styles.alertMessage}>{alertMessage}</Text>}
         
 
         {configStep[5] === "1" && <TouchableOpacity style={styles.connectionButton} onPress={handleGPSPermission}>
@@ -424,7 +435,7 @@ function Configuration(){
           <Text style={styles.connectionTextButton}>enable Bluetooth</Text>
         </TouchableOpacity>}
 
-        {configStep[5] === "4" && <TouchableOpacity style={styles.connectionButton} onPress={scanDevices}>
+        {(configStep[5] === "4" || configStep[5] === "5") && <TouchableOpacity style={styles.connectionButton} onPress={scanDevices}>
           <Text style={styles.connectionTextButton}>Scan nearby peripherals</Text>
         </TouchableOpacity>}
 
@@ -437,6 +448,12 @@ function Configuration(){
         
         {configStep[5] === "5" && <TouchableOpacity style={styles.connectionButton} onPress={async () => await connect(writtenDeviceId).then((e) => console.log(e)).catch((e) => console.log(e))}>
           <Text style={styles.connectionTextButton}>Connect To {writtenDeviceId}</Text>
+        </TouchableOpacity>}
+
+        {configStep[5] === "6" && <TextInput placeholder="Wifi's name (SSID)" onChangeText={(newText) => wifiNameRef.current = newText} style={styles.nameInput}></TextInput>}
+        {configStep[5] === "6" && <TextInput placeholder="Wifi's password" onChangeText={(newText) => wifiPasswordRef.current = newText} style={styles.nameInput}></TextInput>}
+        {configStep[5] === "6" && <TouchableOpacity style={styles.connectionButton} onPress={() => sendDataToRpi(wifiNameRef.current, wifiPasswordRef.current)}>
+          <Text style={styles.connectionTextButton}>Send config to the Rak</Text>
         </TouchableOpacity>}
         
       </SafeAreaView>
@@ -462,6 +479,19 @@ const styles = StyleSheet.create({
     fontWeight : "bold",
     fontSize : 25,
     marginLeft : "5%"
+  },
+  stepExplanationText:{
+    width : "80%",
+    fontSize : 15,
+    marginVertical : "2%"
+  },
+  alertMessage:{
+    width : "100%",
+    backgroundColor : "red",
+    color : "white",
+    fontSize : 15,
+    marginBottom : "5%",
+    padding : 10
   },
   connectionButton:{
     width : "70%",
