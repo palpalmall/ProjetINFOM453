@@ -252,7 +252,7 @@ function Configuration(){
               listener.remove();
             }
             setConfigStep("Step 5. Connect to the Rak");
-            setStepExplanations("Write the name of the Rak in the field beneath and then click on the connect to 'name of the rak' button")
+            setStepExplanations("Select the Rak device and click on it when it has appeared in the list")
             setAlertMessage("") // empty the alertMessage
             resolve(devicesMap);
       };
@@ -418,6 +418,8 @@ function Configuration(){
       </View>
       <SafeAreaView style={styles.container}>
 
+        {configStep[5] === "6" && <Text style={{fontWeight:"bold", fontSize : 20, marginBottom : "5%"}}>Connected!</Text>}
+
         <Text style={styles.sectionTitle}>{configStep}</Text>
         <Text style={styles.stepExplanationText}>{stepExplanations}</Text>
         {alertMessage.length > 0 && <Text style={styles.alertMessage}>{alertMessage}</Text>}
@@ -440,15 +442,11 @@ function Configuration(){
         </TouchableOpacity>}
 
         {(configStep[5] === "4" || configStep[5] === "5") && <Text>Nearby peripherals list : </Text>}
-        {(configStep[5] === "4" || configStep[5] === "5") && Array.from(nearbyPeripherals, ([key, value]) => (
-            <Text key={key}>{value.id + " " + value.name}</Text>
-        ))}  
-
-        {configStep[5] === "5" && <TextInput placeholder="deviceID" onChangeText={(deviceId) => setWrittenDeviceId(deviceId)} style={styles.nameInput}></TextInput>}
-        
-        {configStep[5] === "5" && <TouchableOpacity style={styles.connectionButton} onPress={async () => await connect(writtenDeviceId).then((e) => console.log(e)).catch((e) => console.log(e))}>
-          <Text style={styles.connectionTextButton}>Connect To {writtenDeviceId}</Text>
-        </TouchableOpacity>}
+        {(configStep[5] === "4" || configStep[5] === "5") && Array.from(nearbyPeripherals, ([key, peripheral]) => (
+            <TouchableOpacity key={key} style={styles.deviceButton} onPress={async () => await connect(peripheral.id).then((e) => console.log(e)).catch((e) => console.log(e))}>
+              <Text  style={styles.deviceButtonText}>{peripheral.id + " " + peripheral.name}</Text>
+            </TouchableOpacity>
+        ))}
 
         {configStep[5] === "6" && <TextInput placeholder="Wifi's name (SSID)" onChangeText={(newText) => wifiNameRef.current = newText} style={styles.nameInput}></TextInput>}
         {configStep[5] === "6" && <TextInput placeholder="Wifi's password" onChangeText={(newText) => wifiPasswordRef.current = newText} style={styles.nameInput}></TextInput>}
@@ -506,6 +504,22 @@ const styles = StyleSheet.create({
   connectionTextButton:{
     color:"white",
     fontSize:20
+  },
+  deviceButton:{
+    width : "65%",
+    height :"10%",
+    maxHeight: 50,
+    display : "flex",
+    justifyContent : "center",
+    alignItems:"center",
+    borderRadius : 5,
+    backgroundColor : "grey",
+    marginVertical : "2%",
+    padding : 5
+  },
+  deviceButtonText:{
+    color:"white",
+    fontSize:15
   },
   nameInput:{
     width : "70%",
