@@ -8,13 +8,15 @@ import BleManager, { BleState, Peripheral }  from 'react-native-ble-manager';
 
 global.Buffer = require('buffer').Buffer;
 
-function Configuration(){
+function Configuration({navigation, route}: {navigation: any, route : any}){
 
+  const {userName} = route.params // get params from connection page navigate
   const [nearbyPeripherals, setNearbyPeripherals] = useState<Map<string, Peripheral>>(new Map<string, Peripheral>())
   const [writtenDeviceId, setWrittenDeviceId] = useState("")
   const [configStep, setConfigStep] = useState("Step 1. Enable GPS")
   const [stepExplanations, setStepExplanations] = useState("Click on the button beneath to activate the location of your device")
   const [alertMessage, setAlertMessage] = useState("")
+  const [timeLeft, setTimeLeft] = useState(5)
   const wifiNameRef = useRef("")
   const wifiPasswordRef = useRef("")
   const BleManagerModule = NativeModules.BleManager;
@@ -401,15 +403,16 @@ function Configuration(){
   const sendDataToRpi = async (wifiName : string, wifiPassword : string) => {
     await BleManager.writeWithoutResponse(connectedDeviceId.current, "FFF0", "FFF3", [...Buffer.from(wifiName, "utf-8")])
     await BleManager.writeWithoutResponse(connectedDeviceId.current, "FFF0", "FFF4", [...Buffer.from(wifiPassword, "utf-8")])
+
+    await storeData("configDone", true) // a mettre ailleur ensuite
+    setConfigStep("Step 7. Finished")
+    const decount = setInterval(() => {setTimeLeft(timeLeft -1)}, 1000)
+    const redirection = setTimeout(() => {
+      navigation.navigate("Home", {userName : userName});
+      clearInterval(decount);
+      clearTimeout(redirection);
+      }, 5000)
   }
-
-  useEffect(() => {
-    async function sayConfigDone(){
-      await storeData("configDone", false)
-    }
-
-    sayConfigDone()
-  }, [])
 
   return(
     <>
@@ -453,6 +456,12 @@ function Configuration(){
         {configStep[5] === "6" && <TouchableOpacity style={styles.connectionButton} onPress={() => sendDataToRpi(wifiNameRef.current, wifiPasswordRef.current)}>
           <Text style={styles.connectionTextButton}>Send config to the Rak</Text>
         </TouchableOpacity>}
+
+        {configStep[5] === "7" && 
+        <View>
+          <Text>Configuration finished.</Text> 
+          <Text>Your will be redirected in {timeLeft} sec...</Text>
+        </View>}
         
       </SafeAreaView>
     </>

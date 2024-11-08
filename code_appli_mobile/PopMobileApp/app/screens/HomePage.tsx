@@ -20,7 +20,7 @@ function Home({navigation, route}: {navigation: any, route : any}){
     }
 
     //checkIfConfigDone()
-    navigation.navigate('Configuration')
+    navigation.navigate('Configuration', {userName : userName})
   },[])
 
   return(
