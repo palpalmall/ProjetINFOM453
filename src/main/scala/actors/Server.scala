@@ -2,12 +2,15 @@ package actors
 
 import java.sql.{Connection, DriverManager, SQLException}
 
+import com.typesafe.config._
+import slick.jdbc.JdbcBackend.Database
+
+
 
 object DatabaseConnectivity extends App {
-  
   //JDBC url for connectivity
-  val jdbcUrl = "jdbc:mysql://127.0.0.1:3306/pops"
-  val uname = "root"//MySQL username
+  val jdbcUrl = "jdbc:mysql://192.168.1.37:3307/pops"
+  val uname = "user0"//MySQL username
   val pwd = "Un@murBE"//MySQL password
   var connection: Connection = null
   
@@ -29,10 +32,13 @@ object DatabaseConnectivity extends App {
     case e: SQLException =>
       println("Error Connecting to the database!!")
       e.printStackTrace()
-  }
+  }  
+
+  val db = Database.forConfig("mydb")
+  
 }
 
 object Server {
-    sealed trait ServerCommand
-    final case class getSmtg()
+  sealed trait ServerCommand
+  final case class getSmtg()
 }

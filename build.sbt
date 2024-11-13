@@ -19,5 +19,9 @@ libraryDependencies ++= Seq(
   "ch.qos.logback" % "logback-classic" % "1.2.13",
   "com.typesafe.akka" %% "akka-actor-testkit-typed" % akkaVersion % Test,
   "org.scalatest" %% "scalatest" % "3.2.15" % Test,
+  "com.typesafe.slick" %% "slick" % "3.5.0-RC1",
+  "org.slf4j" % "slf4j-nop" % "1.7.26",
+  "com.typesafe.slick" %% "slick-hikaricp" % "3.5.0-RC1",
+  "com.typesafe" % "config" % "1.4.2",
   "mysql" % "mysql-connector-java" % "8.0.33"
 )
