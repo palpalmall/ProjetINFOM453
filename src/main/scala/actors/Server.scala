@@ -11,6 +11,7 @@ import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.concurrent.{ Await, Future }
+import scala.concurrent._
 
 
 class Team(tag: Tag) extends Table[(Int, String)](tag, "TEAM") {
@@ -76,12 +77,14 @@ object DatabaseConnectivity extends App {
   
   val q = teams.map(_.teamname)
   val action = q.result
-  val result = db.run(action)
-  val sql = action.statements
-  Await.ready(result, Duration.Inf)
-
-  print(result)
+  val result: Future[Seq[String]] = db.run(action)
+  result.onComplete {
+    case scala.util.Success(t) => t.foreach(x => print(x + '\n'))
+    case scala.util.Failure(s) => println(s"failure")
+  }
+  Thread.sleep(10000)
 }
+
 
 object Server {
   sealed trait ServerCommand
