@@ -4,6 +4,8 @@ import java.sql.{Connection, DriverManager, SQLException}
 
 import com.typesafe.config._
 import slick.jdbc.JdbcBackend.Database
+import scala.concurrent.ExecutionContext.Implicits.global
+import slick.jdbc.MySQLProfile.api._
 
 
 
@@ -35,10 +37,42 @@ object DatabaseConnectivity extends App {
   }  
 
   val db = Database.forConfig("mydb")
-  
+
 }
 
 object Server {
   sealed trait ServerCommand
   final case class getSmtg()
 }
+
+
+
+class Team(tag: Tag) extends Table[(Int, String)](tag, "team") {
+  def teamid = column[Int]("TeamId", O.PrimaryKey)
+  def teamname = column[String]("TeamName")
+  def * = (teamid, teamname)
+}
+
+val teams = TableQuery[Team]
+
+class Client(tag: Tag) extends Table[(Int, String, Int)](tag, "client") {
+  def clientid = column[Int]("ClientId", O.PrimaryKey)
+  def clientname = column[String]("ClientName")
+  def teamkey = column[Int]("TeamKey")
+  def * = (clientid, clientname, teamkey)
+  def team = foreignKey("TeamFK", teamkey, teams)(_.teamid)
+}
+
+val clients = TableQuery[Client]
+
+class User(tag: Tag) extends Table[(Int, String, Int, Int)](tag, "user") {
+  def userid = column[Int]("UserId", O.PrimaryKey)
+  def username = column[String]("UserName")
+  def clientkey = column[Int]("ClientKey")
+  def userkey = column[Int]("UserKey")
+  def * = (userid, username, clientkey, userkey)
+  def team = foreignKey("ClientKey", clientkey, clients)
+  def user = foreignKey("UserKey", userkey, clients)
+}
+
+val user = TableQuery[User]
