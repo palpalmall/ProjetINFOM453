@@ -131,6 +131,7 @@ object Team {
 
   sealed trait TeamCommand
   final case class AddDeviceToActor(deviceID: String, user: String, team: String, replyTo: ActorRef[Team]) extends TeamCommand
+  final case class UserTerminated(actor: ActorRef[User.UserCommand] , name: String) extends TeamCommand
 
   def apply(): Behavior[TeamCommand] =
     users(scala.collection.mutable.Map.empty)
@@ -143,7 +144,15 @@ object Team {
           case Some(userActor) => 
             userActor ! User.AddDevice(devID, repTo)
           case None =>
+            context.log.info(s"Creating a team with name $user")
+            val newUser = context.spawn(User(), user)
+            context.watchWith(newUser, UserTerminated(newUser, user)) //Whenever the newTeam actor ends, it sends a signal to this TeamManager
+            users += user -> newUser
         }
+        Behaviors.same
+      case UserTerminated(_, name) => 
+        context.log.info("Termination of User : {}", name)
+        users.remove(name)
         Behaviors.same
       }
     }
