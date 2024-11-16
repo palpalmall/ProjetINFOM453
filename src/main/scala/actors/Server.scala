@@ -142,6 +142,7 @@ object Team {
         users.get(user) match {
           case Some(userActor) => 
             userActor ! User.AddDevice(devID, repTo)
+          case None =>
         }
         Behaviors.same
       }
