@@ -120,7 +120,6 @@ object TeamManager {
             context.log.info("Termination of team : {}", name)
             teams.remove(name)
             Behaviors.same
-        
       }  
     }
 
