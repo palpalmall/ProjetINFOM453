@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 
 import asyncio
+import json
 from websockets.server import serve
 
 async def echo(websocket):
     async for message in websocket:
+        print("received %s" %(json.loads(message)))
         await websocket.send(message)
 
 async def main():
