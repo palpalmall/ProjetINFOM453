@@ -283,8 +283,8 @@ function Configuration({navigation, route}: {navigation: any, route : any}){
 
   // Step 5. Connect to the Rak
   const MAX_CONNECT_WAITING_PERIOD = 30000;
-  const serviceReadinIdentifier = 'FFF0';
-  const charNotificationIdentifier = 'FFF2';
+  const serviceReadinIdentifier = 'A07498CA-AD5B-474E-940D-16F1FBE7E8CD';
+  const charNotificationIdentifier = "51FF12BB-3ED8-46E5-B4F9-D64E2FEC021B"//'51FF12BB-3ED8-46E5-B4F9-D64E2FEC021B';
   const connectedDeviceId = useRef("")
   
   const enableBluetooth = async () => {
@@ -354,7 +354,10 @@ function Configuration({navigation, route}: {navigation: any, route : any}){
         console.log("connected to ", connectedDeviceId.current)
         //get the services and characteristics information for the connected hardware device.
         const peripheralInformation = await BleManager.retrieveServices(deviceId);
-        console.log("connected ! and ", peripheralInformation)
+        //console.log("connected ! and ", peripheralInformation)
+        for (let characteristic of peripheralInformation.characteristics!){
+          console.log(characteristic.characteristic, characteristic.properties)
+        }
 
         /**
          * Check for supported services and characteristics from device info
@@ -378,15 +381,14 @@ function Configuration({navigation, route}: {navigation: any, route : any}){
           .startNotification(deviceId, serviceReadinIdentifier, charNotificationIdentifier)
           .then(response => {
             console.log('Started notification successfully on ', charNotificationIdentifier);
+            setConfigStep("Step 6. Send the wifi's name and password")
+            setStepExplanations("Write down into the beneath fields the name of your wifi and the password before sending them to the Rak")
           })
           .catch(async () => {
             isConnected = false;
             await BleManager.disconnect(connectedDeviceId.current);
             return reject('Failed to start notification on required service and characteristic.');
           });
-
-          setConfigStep("Step 6. Send the wifi's name and password")
-          setStepExplanations("Write down into the beneath fields the name of your wifi and the password before sending them to the Rak")
 
           let disconnectListener = bleManagerEmitter.addListener('BleManagerDisconnectPeripheral',async () => {
             //addd the code to execute after hardware disconnects.
@@ -401,12 +403,16 @@ function Configuration({navigation, route}: {navigation: any, route : any}){
     };
 
   const sendDataToRpi = async (wifiName : string, wifiPassword : string) => {
-    await BleManager.writeWithoutResponse(connectedDeviceId.current, "FFF0", "FFF3", [...Buffer.from(wifiName, "utf-8")])
-    await BleManager.writeWithoutResponse(connectedDeviceId.current, "FFF0", "FFF4", [...Buffer.from(wifiPassword, "utf-8")])
+    const service_send_wifi_data = "A07498CA-AD5B-474E-940D-16F1FBE7E8CD"
+    const wifi_name_char = "51FF12BB-3ED8-46E5-B4F9-D64E2FEC021B"
+    const wifi_password_char = "51FF12BB-3ED8-46E5-B4F9-D64E2FEC021C"
+    await BleManager.writeWithoutResponse(connectedDeviceId.current, service_send_wifi_data, wifi_name_char, [...Buffer.from(wifiName, "utf-8")])//"FFF0", "FFF3", [...Buffer.from(wifiName, "utf-8")])
+    await BleManager.writeWithoutResponse(connectedDeviceId.current, service_send_wifi_data, wifi_password_char, [...Buffer.from(wifiPassword, "utf-8")])
 
     await storeData("configDone", true) // a mettre ailleur ensuite
     setConfigStep("Step 7. Finished")
-    const decount = setInterval(() => {setTimeLeft(timeLeft -1)}, 1000)
+    setStepExplanations("")
+    const decount = setInterval(() => {setTimeLeft((timeLeft) => timeLeft -1)}, 1000)
     const redirection = setTimeout(() => {
       navigation.navigate("Home", {userName : userName});
       clearInterval(decount);
