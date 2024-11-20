@@ -412,7 +412,7 @@ function Configuration({navigation, route}: {navigation: any, route : any}){
     await storeData("configDone", true) // a mettre ailleur ensuite
     setConfigStep("Step 7. Finished")
     setStepExplanations("")
-    const decount = setInterval(() => {setTimeLeft(timeLeft -1)}, 1000)
+    const decount = setInterval(() => {setTimeLeft((timeLeft) => timeLeft -1)}, 1000)
     const redirection = setTimeout(() => {
       navigation.navigate("Home", {userName : userName});
       clearInterval(decount);
