@@ -113,10 +113,23 @@ object ActorsTest extends App {
     db ! AddUser(rasp1, "marc")
     println(db) */
 
-    val configFile = getClass.getClassLoader.getResource("local_application.conf").getFile
+     //get the configuration file from classpath
+    val configFile = getClass.getClassLoader.getResource("remote_application.conf").getFile
+    //parse the config
     val config = ConfigFactory.parseFile(new File(configFile))
-    val system = ActorSystem("ClientSystem",config)
-    val localActor = system.actorOf(Props(LocalActor()), "local")
+    //create an actor system with that config
+    val system = ActorSystem("RemoteSystem" , config)
+    //create a remote actor from actorSystem
+    val remote = system.actorOf(Props(RemoteActor()), name="remote")
+    println(remote)
+    println("remote is ready")
+
+    val configFile1 = getClass.getClassLoader.getResource("local_application.conf").getFile
+    val config1 = ConfigFactory.parseFile(new File(configFile1))
+    val system1 = ActorSystem("ClientSystem",config)
+    val localActor1 = system.actorOf(Props(LocalActor()), name="local")
+    Thread.sleep(1000)
+    print(remote)
 }
 
 
