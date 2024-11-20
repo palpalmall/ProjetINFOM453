@@ -4,8 +4,8 @@ from Utils_RPi_Arduino import activate_ping_figurine, activate_mood_figurine, ac
 def sendPing( data_struct, websocket) :
     json_data_struct = json.dumps(data_struct)
     websocket.send(json_data_struct)
-    message = websocket.recv()
-    print(f"Received: {message}")
+    #message = websocket.recv()
+    #print(f"Received: {message}")
 
 def receivePing(data_struct, id_figurine) :
     activate_ping_figurine(id_figurine)

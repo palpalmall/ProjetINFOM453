@@ -1,6 +1,6 @@
-from smbus import SMBus
+#from smbus import SMBus
 
-bus = SMBus(1) # indicates /dev/ic2-1
+#bus = SMBus(1) # indicates /dev/ic2-1
 addr1 = 0x8
 addr2 = 0x3C
 
