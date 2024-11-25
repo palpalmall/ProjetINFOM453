@@ -19,18 +19,20 @@ exempleStatusReceived = {
 
 def activate_ping_figurine(id_figurine):
   print("ping figurine %d" %id_figurine)
-  bus.write_i2c_block_data(addr1,4, [1]) # switch servo motor on
+  addr = NamesAddrDico[id_figurine]
+  bus.write_i2c_block_data(addr,4, [1]) # switch servo motor on
 		
 def activate_status_figurine(id_figurine, status):
+  addr =  NamesAddrDico[id_figurine]
   match status:
     case "occupied":
-      bus.write_i2c_block_data(id_figurine,0, [0])
+      bus.write_i2c_block_data(addr,0, [0])
 			
     case "absent":
-      bus.write_i2c_block_data(id_figurine,0, [1])
+      bus.write_i2c_block_data(addr,0, [1])
 			
     case "available":
-      bus.write_i2c_block_data(id_figurine,0, [2])
+      bus.write_i2c_block_data(addr,0, [2])
 			
   print("status is %s" %status)
 		
@@ -57,3 +59,4 @@ def askForSmashedHead(NamesAddrDico):
 			smashedHeadDico[namesAddr] = smashed
 		except :
 			print("name %s does not exist in the addresses dico" %(namesAddr))
+	return smashedHeadDico

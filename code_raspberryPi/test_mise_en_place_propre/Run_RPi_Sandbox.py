@@ -1,7 +1,7 @@
 import json
 import asyncio
 from websockets.sync.client import connect
-from Utils_websocket import receiveMood, receivePing, receiveStatus, sendPing
+from test_mise_en_place_propre.Utils_web_requests import receiveMood, receivePing, receiveStatus, sendPing
 
 my_websocket = connect("ws://localhost:8765")
 
