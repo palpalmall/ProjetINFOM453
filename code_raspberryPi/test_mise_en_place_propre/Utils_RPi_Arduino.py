@@ -38,6 +38,9 @@ def activate_status_figurine(id_figurine, status):
 		
 def activate_mood_figurine(id_figurine, mood):
   print("mood is %s" %mood)
+  addr =  NamesAddrDico[id_figurine]
+  message = mood.encode("utf-8")# tranform mood message into a coded list
+  bus.write_i2c_block_data(addr, 3, message)
 
 # envoit aux arduinos la valeur de status pour chaque figurine
 # action nbr = 0

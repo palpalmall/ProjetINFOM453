@@ -11,7 +11,7 @@ import time
 # action nbr 0 = status (absent/present)
 # action nbr 1 = LED onboard
 # action nbr 2 = smashed head
-# action nbr 3 = text
+# action nbr 3 = mood
 # action nbr 4 = servo motor
 
 #Lorsque vous lancez le code python, l'on vous demande un chiffre : 
