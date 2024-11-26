@@ -10,35 +10,43 @@
 // Include the Wire library for I2C
 #include <Wire.h>
 #include <Servo.h>
- 
-// LED on pin 6
-const int ledPin = 6; // onboard led
-const int redLEDPin = 1; //normal pin (not analog nor pwm)
-const int yellowLEDPin = 7; //normal pin (not analog nor pwm)
+
+// LED on pin 13
+const int buttonPin = 7;
+const int ledPin = 6; // onboard pin
+const int REDPin = 4; //PWM PIN
+const int GREENPin = 3; //PWM PIN
+const int BLUEPin = 2; //PWM PIN
+bool teteFrappe = false;
+const int analogPin = 0;
 
 Servo myservo;
-const int servoPin = 5;
+const int servoPin = 5; // PWM PIN
 int pos = 0;
  
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(9600); //to print analog data
+
   // Join I2C bus as slave with address 8
-  Wire.begin(0x8);
+  Wire.begin(0x3C);
   
   // Call receiveEvent when data received                
   Wire.onReceive(receiveEvent);
 
   // Call receiveEvent when data received                
   Wire.onRequest(requestEvent);
+
+  // For the button, to click on figurine's head
+  pinMode(buttonPin, INPUT_PULLUP);  
   
-  // Setup pin 6 as output and turn LED off
+  // Setup pin 13 and RGB pins as output and turn LEDs off
   pinMode(ledPin, OUTPUT);
-  pinMode(redLEDPin, OUTPUT);
-  pinMode(yellowLEDPin, OUTPUT);
+  pinMode(REDPin, OUTPUT);
+  pinMode(GREENPin, OUTPUT);
+  pinMode(BLUEPin, OUTPUT);
+  // on eteind les pins RGB
+  shutDownRGBLED();
   digitalWrite(ledPin, LOW); //on eteind la onboard led
-  //on eteind les led rouge et jaune
-  digitalWrite(redLEDPin, LOW);
-  digitalWrite(yellowLEDPin, LOW);
 
   myservo.attach(servoPin);
   myservo.write(0);
@@ -46,9 +54,8 @@ void setup() {
  
 // Function that executes whenever data is received from master
 void receiveEvent(int howMany) {
-  if (Wire.available()>0){
-    digitalWrite(redLEDPin, LOW);
-    digitalWrite(yellowLEDPin, LOW);
+  if (Wire.available() > 0){
+    shutDownRGBLED();
 
     // on recoit dans l'ordre : [action, data=optional]
     int action = Wire.read(); // read the first byte to know the action needed to be done
@@ -56,14 +63,17 @@ void receiveEvent(int howMany) {
 
     switch(action){
 
-      case 0 :{ // status LED action
+      case 0 :{ // status LED action (WRITE)
         int data = Wire.read(); // n'en a que si on recoit un write et pas un read
+        print("data = ", data);
         if(data == 0){ // status = absent donc lumiere rouge
-          digitalWrite(redLEDPin, HIGH);
-          digitalWrite(yellowLEDPin, LOW);
-        }else{
-          digitalWrite(redLEDPin, LOW);
-          digitalWrite(yellowLEDPin, HIGH);
+          analogWrite(REDPin, 255);
+          digitalWrite(GREENPin, LOW);
+          digitalWrite(BLUEPin, LOW);
+        }else{ // status = present donc lumiere verte
+          analogWrite(GREENPin, 255);
+          digitalWrite(REDPin, LOW);
+          digitalWrite(BLUEPin, LOW);
         }
         break;}
 
@@ -82,7 +92,7 @@ void receiveEvent(int howMany) {
   }
 }
 
-void requestEvent(){
+void requestEvent(){ // launched when master makes a read (request)
   
   int request = Wire.read(); // read the first byte to know the action needed to be done
   print("request = ", request);
@@ -101,6 +111,17 @@ void requestEvent(){
   }
 }
 
+void shutDownRGBLED(){ // shut down rgb LED
+  analogWrite(REDPin, LOW);
+  analogWrite(GREENPin, LOW);
+  analogWrite(BLUEPin, LOW);
+}
+
+void print(String text,int data){
+  Serial.print(text);Serial.print(data);
+  Serial.print("\n");
+}
+
 void testServo(){
   for (pos = 0; pos <= 180; pos += 1) { // goes from 0 degrees to 180 degrees
     // in steps of 1 degree
@@ -113,12 +134,6 @@ void testServo(){
   }
 }
 
-
-void print(String text,int data){
-  Serial.print(text);Serial.print(data);
-  Serial.print("\n");
-}
-
 void buttonPressed(){
   if (digitalRead(signalPin) == LOW)
   {
@@ -129,4 +144,6 @@ void buttonPressed(){
 void loop() {
   delay(100);
   buttonPressed();
+  //Serial.print(analogRead(analogPin));
+  //Serial.print("\n");
 }
