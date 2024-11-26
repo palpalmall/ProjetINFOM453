@@ -89,7 +89,8 @@ void requestEvent(){
 
   switch(request){
     case 2:{
-      Wire.write(true);
+      Wire.write(teteFrappe);
+      teteFrappe = false;
       break;
     }
 
@@ -118,6 +119,14 @@ void print(String text,int data){
   Serial.print("\n");
 }
 
+void buttonPressed(){
+  if (digitalRead(signalPin) == LOW)
+  {
+    teteFrappe = true;
+  }
+}
+
 void loop() {
   delay(100);
+  buttonPressed();
 }

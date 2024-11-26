@@ -12,11 +12,12 @@
 #include <Servo.h>
 
 // LED on pin 13
+const int buttonPin = 7;
 const int ledPin = 6; // onboard pin
 const int REDPin = 4; //PWM PIN
 const int GREENPin = 3; //PWM PIN
 const int BLUEPin = 2; //PWM PIN
-const bool teteFrappe = true;
+bool teteFrappe = false;
 const int analogPin = 0;
 
 Servo myservo;
@@ -35,6 +36,8 @@ void setup() {
   // Call receiveEvent when data received                
   Wire.onRequest(requestEvent);
 
+  // For the button, to click on figurine's head
+  pinMode(buttonPin, INPUT_PULLUP);  
   
   // Setup pin 13 and RGB pins as output and turn LEDs off
   pinMode(ledPin, OUTPUT);
@@ -90,7 +93,8 @@ void requestEvent(){ // launched when master makes a read (request)
 
   switch(request){
     case 2:{
-      Wire.write(true);
+      Wire.write(teteFrappe);
+      teteFrappe = false;
       break;
     }
 
@@ -124,9 +128,16 @@ void testServo(){
   }
 }
 
+void buttonPressed(){
+  if (digitalRead(signalPin) == LOW)
+  {
+    teteFrappe = true;
+  }
+}
+
 void loop() {
   delay(100);
-  
+  buttonPressed();
   //Serial.print(analogRead(analogPin));
   //Serial.print("\n");
 }

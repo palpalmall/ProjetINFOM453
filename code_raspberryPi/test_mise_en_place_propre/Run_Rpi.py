@@ -9,7 +9,7 @@ NamesAddrDico = {
 
 login, psw = TODO
 # d'abord, il faut recup le login password avec bluetooth
-my_id, team_nbr = get_init()
+my_id, team_nbr = get_init(login, psw)
 
 while True :
     # faire les get
