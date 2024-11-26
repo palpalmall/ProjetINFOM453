@@ -124,19 +124,19 @@ void setup() {
 
 void loop() {
   lcd.setCursor(0, 1);
-  lcd.write((byte)1);
+  lcd.write(byte(1));
 
   lcd.setCursor(4, 1);
-  lcd.write((byte)4);
+  lcd.write(byte(4));
 
   lcd.setCursor(8, 1);
-  lcd.write((byte)3);
+  lcd.write(byte(3));
 
   lcd.setCursor(12, 1);
-  lcd.write((byte)4);
+  lcd.write(byte(4));
 
   lcd.setCursor(15, 1);
-  lcd.write((byte)1);
+  lcd.write(byte(1));
 
 
   //resetting cursor

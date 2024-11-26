@@ -10,22 +10,72 @@
 // Include the Wire library for I2C
 #include <Wire.h>
 #include <Servo.h>
+#include <LiquidCrystal.h>
 
 // LED on pin 13
-const int buttonPin = 7;
+const int buttonPin = A1;
 const int ledPin = 6; // onboard pin
 const int REDPin = 4; //PWM PIN
 const int GREENPin = 3; //PWM PIN
 const int BLUEPin = 2; //PWM PIN
 bool teteFrappe = false;
-const int analogPin = 0;
+//const int analogPin = 0;
+
+// initialize the library with the numbers of the MKR Pin: ( From D0 to D5 )
+LiquidCrystal lcd(5, 6, 7, 8, 9, 10);
+
+byte heart[8] = {
+  0b00000,
+  0b01010,
+  0b11111,
+  0b11111,
+  0b11111,
+  0b01110,
+  0b00100,
+  0b00000
+};
+
+byte smiley[8] = {
+  0b00000,
+  0b00000,
+  0b01010,
+  0b00000,
+  0b00000,
+  0b10001,
+  0b01110,
+  0b00000
+};
+
+byte armsDown[8] = {
+  0b00100,
+  0b01010,
+  0b00100,
+  0b00100,
+  0b01110,
+  0b10101,
+  0b00100,
+  0b01010
+};
+
+byte armsUp[8] = {
+  0b00100,
+  0b01010,
+  0b00100,
+  0b10101,
+  0b01110,
+  0b00100,
+  0b00100,
+  0b01010
+};
+
+String text = "coucou les amis";
 
 Servo myservo;
 const int servoPin = 5; // PWM PIN
 int pos = 0;
  
 void setup() {
-  Serial.begin(9600); //to print analog data
+  Serial.begin(4800); //to print analog data
 
   // Join I2C bus as slave with address 8
   Wire.begin(0x3C);
@@ -50,6 +100,35 @@ void setup() {
 
   myservo.attach(servoPin);
   myservo.write(0);
+
+  // initialize LCD and set up the number of columns and rows:
+  lcd.begin(16, 2);
+  lcd.clear();
+  // // create a new character
+  // lcd.createChar(0, heart);
+  // // create a new character
+  // lcd.createChar(1, smiley);
+  // // create a new character
+  // lcd.createChar(3, armsDown);
+  // // create a new character
+  // lcd.createChar(4, armsUp);
+  // // set the cursor to the top left
+  // lcd.setCursor(0, 0);
+  // delay(1250);
+  // //clearing for next loop
+  // lcd.clear();
+
+  //resetting cursor
+  lcd.home();
+  
+  //printing text
+  for (int ch = 0; ch <= text.length(); ch++){
+    lcd.print(text[ch]);
+    delay(250);
+  }
+  lcd.autoscroll();
+  lcd.setCursor(0,0);
+  lcd.noAutoscroll(); //stoppping autoscroll when full text is printed
 }
  
 // Function that executes whenever data is received from master
