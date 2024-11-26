@@ -135,7 +135,7 @@ void testServo(){
 }
 
 void buttonPressed(){
-  if (digitalRead(signalPin) == LOW)
+  if (digitalRead(buttonPin) == LOW)
   {
     teteFrappe = true;
   }

@@ -28,7 +28,7 @@ void setup() {
   Serial.begin(9600); //to print analog data
 
   // Join I2C bus as slave with address 8
-  Wire.begin(0x3C);
+  Wire.begin(0x8);
   
   // Call receiveEvent when data received                
   Wire.onReceive(receiveEvent);
@@ -135,7 +135,7 @@ void testServo(){
 }
 
 void buttonPressed(){
-  if (digitalRead(signalPin) == LOW)
+  if (digitalRead(buttonPin) == LOW)
   {
     teteFrappe = true;
   }
