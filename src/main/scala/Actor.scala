@@ -13,6 +13,6 @@ import akka.actor.Actor
 //a toy actor to test our scalatra servlet
 class Mactor extends Actor {
   def receive: Receive = {
-    case "One" => sender() ! "two"
+    case "One" => sender() ! List("two")
   }
 }

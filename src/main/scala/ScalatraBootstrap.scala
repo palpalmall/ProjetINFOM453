@@ -13,5 +13,7 @@ class ScalatraBootstrap extends LifeCycle {
 
     override def init(context: ServletContext): Unit = {
         context.mount(new PopServer(system, myActor), "/*")
+        context.setInitParameter(org.scalatra.EnvironmentKey, "production")
+        context.setInitParameter(ScalatraBase.HostNameKey, "popsapp")
     }
 }

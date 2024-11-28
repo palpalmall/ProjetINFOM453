@@ -59,6 +59,9 @@ lazy val hello = (project in file("."))
       "org.slf4j" % "slf4j-nop" % "2.0.0",
       "com.typesafe.slick" %% "slick-hikaricp" % "3.5.0-RC1",
       "com.typesafe" % "config" % "1.4.2",
+      "org.scalatra" %% "scalatra-json" % "3.0.0-M5-jakarta",
+      "org.json4s"   %% "json4s-jackson" % "4.1.0-M8",
+      "org.dispatchhttp"        %% "dispatch-core"   % "2.0.0",
     ),
   )
 
