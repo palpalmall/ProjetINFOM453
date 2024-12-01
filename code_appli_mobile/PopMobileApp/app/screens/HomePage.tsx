@@ -1,14 +1,23 @@
 import { Platform, SafeAreaView, StyleSheet, StatusBar, Text, TextInput, View, TouchableOpacity } from "react-native"
 import { storeData, getData } from "../Utils";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 function Home({navigation, route}: {navigation: any, route : any}){
   
   const {userName} = route.params // get params from connection page navigate
   const [selectedStatus, setSelectedStatus] = useState(-1)
   const [selectedSmiley, setSelectedSmiley] = useState(-1)
+  const moodInputRef = useRef("")
   const smileys = ["😄","😂","🥳","😎","😮","😡","😢"]
   const status = ["green", "yellow", "red"]
+
+  const sendData = () => {
+    const dataToSend = {"status" : status[selectedStatus],
+                        "smiley" : smileys[selectedSmiley],
+                        "mood" : moodInputRef.current
+    }
+    //fetch
+  }
 
   useEffect(() => {
 
@@ -20,7 +29,7 @@ function Home({navigation, route}: {navigation: any, route : any}){
     }
 
     //checkIfConfigDone()
-    navigation.navigate('Configuration', {userName : userName})
+    //navigation.navigate('Configuration', {userName : userName})
   },[])
 
   return(
@@ -53,7 +62,7 @@ function Home({navigation, route}: {navigation: any, route : any}){
             </View>
           </View>
 
-          <View>
+          <View style={styles.moodContainer}>
             <View style={styles.sectionTitleContainer}>
               <Text style={styles.sectionTitle}>Mood</Text>
             </View>
@@ -65,11 +74,13 @@ function Home({navigation, route}: {navigation: any, route : any}){
                 )
               })}
             </View>
+
+            <TextInput placeholder="Write your mood..." onChangeText={(newMood) => {moodInputRef.current = newMood}} maxLength={16} textAlign="center" style={styles.moodInput}></TextInput>
           </View>
 
           
           <View style={styles.buttonContainer}>
-            <TouchableOpacity onPress={() => {}} style={styles.connectionButton}>
+            <TouchableOpacity onPress={() => sendData()} style={styles.connectionButton}>
               <Text style={styles.connectionTextButton}>Update Status</Text>
             </TouchableOpacity>
           </View>
@@ -126,6 +137,10 @@ const styles = StyleSheet.create({
   redStatus:{
     backgroundColor : "red"
   },
+  moodContainer:{
+    display: "flex",
+    alignItems : "center"
+  },
   smileyContainer:{
     display : "flex",
     flexWrap : "wrap",
@@ -143,13 +158,21 @@ const styles = StyleSheet.create({
   smiley:{
     fontSize : 25
   },
+  moodInput:{
+    width : "80%",
+    height : "20%",
+    borderColor : "#e3dada",
+    borderWidth : 3,
+    borderRadius : 5,
+    padding : 10,
+    marginTop: "5%"
+  },
   buttonContainer:{
     width : "100%",
     height : "10%",
     display : "flex",
     justifyContent : "center",
     alignItems : "center",
-    marginTop : "10%"
   },
   connectionButton:{
     width : "70%",
