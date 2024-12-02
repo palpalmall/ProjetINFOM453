@@ -149,7 +149,7 @@ void setup() {
 
   lcd.print(" Arduino! ");
 
-  lcd.write((byte)1);
+  lcd.write(byte(1));
 
 
 }

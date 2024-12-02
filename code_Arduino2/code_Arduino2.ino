@@ -28,7 +28,7 @@ void setup() {
   Serial.begin(9600); //to print analog data
 
   // Join I2C bus as slave with address 8
-  Wire.begin(0x3C);
+  Wire.begin(0x8);
   
   // Call receiveEvent when data received                
   Wire.onReceive(receiveEvent);
@@ -46,6 +46,7 @@ void setup() {
   pinMode(BLUEPin, OUTPUT);
   // on eteind les pins RGB
   shutDownRGBLED();
+  digitalWrite(ledPin, LOW); //on eteind la onboard led
 
   myservo.attach(servoPin);
   myservo.write(0);
@@ -80,6 +81,11 @@ void receiveEvent(int howMany) {
         int data = Wire.read(); // n'en a que si on recoit un write et pas un read
         print("data = ", data);
         digitalWrite(ledPin, data);
+        break;}
+
+      case 4 :{
+        int data = Wire.read();
+        testServo();
         break;}
 
     }
@@ -129,7 +135,7 @@ void testServo(){
 }
 
 void buttonPressed(){
-  if (digitalRead(signalPin) == LOW)
+  if (digitalRead(buttonPin) == LOW)
   {
     teteFrappe = true;
   }

@@ -76,7 +76,7 @@ object DatabaseConnectivity extends App {
       e.printStackTrace()
   }   */
 
-  val db = Database.forConfig("mydb")
+  /* val db = Database.forConfig("mydb")
   
   val q = teams.map(_.teamname)
   val action = q.result
@@ -85,6 +85,9 @@ object DatabaseConnectivity extends App {
     case scala.util.Success(t) => t.foreach(x => print(x + '\n'))
     case scala.util.Failure(s) => println(s"failure")
   }
+  Thread.sleep(10000) */
+
+  val serv = Server()
   Thread.sleep(10000)
 }
 
