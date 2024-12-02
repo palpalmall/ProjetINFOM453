@@ -1,19 +1,20 @@
-#from smbus import SMBus
+from smbus import SMBus
+from Phidget22.Devices.RFID import *
+import time, functools
 
-#bus = SMBus(1) # indicates /dev/ic2-1
+bus = SMBus(1) # indicates /dev/ic2-1
 addr1 = 0x8
 addr2 = 0x3C
 
 #Nom des figurines et leurs adresses arduino
 NamesAddrDico = {
-	"Josephine" : 0x8,# mkr1000 address
-	"Richard" : 0x3C, #uno R3 address
+	
 }
 
 #Noms des figurines et leur status (false = absent, true = present)
 exempleStatusReceived = {
-	"Josephine" : True,
-	"Richard" : False
+	"101112" : True,
+	"101113" : False
 }
 
 
@@ -63,3 +64,25 @@ def askForSmashedHead(NamesAddrDico):
 		except :
 			print("name %s does not exist in the addresses dico" %(namesAddr))
 	return smashedHeadDico
+
+
+def onTag(self, tag, protocol, param):
+	split_tag = tag.split("-")
+	param[split_tag[0]] = split_tag[1]
+	print("Tag : "+str(tag))
+	print("Protocol : "+str(protocol))
+
+def RFID_init(onTag, dico):
+	ch = RFID()
+	ch.openWaitForAttachment(3000)
+	ch.setOnTagHandler(functools.partial(onTag, param=dico))
+
+	antennaEnabled = ch.getAntennaEnabled()
+	if(not antennaEnabled):
+		ch.setAntennaEnabled(True)
+
+	return ch
+    
+# To give a tag to the badge
+# while True: 
+# 	ch.write("101112-0x8", RFIDProtocol.PROTOCOL_PHIDGETS, False)
