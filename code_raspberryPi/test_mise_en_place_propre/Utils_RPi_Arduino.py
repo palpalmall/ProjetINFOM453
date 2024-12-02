@@ -1,5 +1,6 @@
 from smbus import SMBus
 from Phidget22.Devices.RFID import *
+from Phidget22.Devices.TemperatureSensor import *
 import time, functools
 
 bus = SMBus(1) # indicates /dev/ic2-1
@@ -82,6 +83,15 @@ def RFID_init(onTag, dico):
 		ch.setAntennaEnabled(True)
 
 	return ch
+
+def temperature_init():
+	tempSensor = TemperatureSensor()
+	tempSensor.openWaitForAttachment(2000)
+	return tempSensor
+
+def get_temperature(tempSensor):
+	temperature = tempSensor.getTemperature()
+	print("Temperature : " + str(temperature))
     
 # To give a tag to the badge
 # while True: 

@@ -37,13 +37,14 @@
 #     time.sleep(1)
 
 # ================================ TEST RFID ==================================
-from Utils_RPi_Arduino import onTag, RFID_init
+from Phidget22.Devices.TemperatureSensor import *
 import time
-from Phidget22.Devices.RFID import *
 
-NamesAddrDico = {}
-ch = RFID_init(onTag, NamesAddrDico)
+tempSensor = TemperatureSensor()
+tempSensor.openWaitForAttachment(2000)
 
-while True:
-    time.sleep(2)
-    print(NamesAddrDico)
+while True :
+    time.sleep(2)    
+    temperature = tempSensor.getTemperature()
+    print("Temperature : " + str(temperature))
+
