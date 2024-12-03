@@ -1,10 +1,9 @@
-import json
+import json, time, threading
 from Utils_web_requests import *
-from Utils_RPi_Arduino import askForSmashedHead
+from Utils_RPi_Arduino import askForSmashedHead, onTag, RFID_init, Repeat, get_temperature, temperature_init
 
 NamesAddrDico = {
-	"Josephine" : 0x8,# mkr1000 address
-	"Richard" : 0x3C, #uno R3 address
+	
 }
 
 config_done = False
@@ -13,6 +12,13 @@ login, psw = TODO
 # d'abord, il faut recup le login password avec bluetooth
 my_id, team_nbr = get_init(login, psw)
 
+ch = RFID_init(onTag, NamesAddrDico)
+tempSensor = temperature_init()
+
+# launch a thread which send temperature to the server every hour
+t = Repeat(3600, lambda: post_temperature(team_nbr, my_id, get_temperature(tempSensor)))
+t.start()
+
 #check figurines connected to he RPi
 #send figurines availables to the server
 
@@ -20,6 +26,7 @@ if(my_id != -1 and team_nbr != -1):
     config_done = True
 
 while config_done :
+
     # faire les get
     get_ping(team_nbr, my_id) # get ping from server AND send it to the figurine
     get_status(team_nbr, my_id) # get status from server AND end it to the figurine

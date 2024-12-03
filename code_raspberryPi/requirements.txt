@@ -1,0 +1,14 @@
+bleak==0.22.3
+bless==0.2.6
+certifi==2024.8.30
+charset-normalizer==3.4.0
+dbus-next==0.2.3
+idna==3.10
+phidget22==1.21.20241125
+requests==2.32.3
+RPi.GPIO==0.7.1
+smbus==1.1.post2
+typing_extensions==4.12.2
+urllib3==2.2.3
+websockets==14.1
+dbus-fast==2.24.4
