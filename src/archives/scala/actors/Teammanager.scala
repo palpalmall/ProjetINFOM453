@@ -117,6 +117,6 @@ object TeamManagerActor {
         Behaviors.same
 
     }
+    }
   }
-}
 

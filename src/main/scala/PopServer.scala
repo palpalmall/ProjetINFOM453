@@ -1,9 +1,7 @@
-package actors
+package com.example.app
 
 import org.scalatra.*
 import akka.actor.{Actor, ActorRef, ActorSystem}
-import akka.actor.typed.ActorRef as TAR 
-import akka.actor.typed.ActorSystem as TAS 
 import akka.pattern.{ask, pipe}
 import akka.util.LineNumbers.Result
 import akka.util.Timeout
@@ -19,9 +17,6 @@ import scala.util.Failure
 import dispatch._
 import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.util.{Failure, Success, Try}
-import akka.actor.typed.scaladsl.AskPattern.Askable
-import akka.actor.typed.SpawnProtocol
-
 
 //Scalatra servlet that has a behavior for each path in URL.
 class PopServer(system: ActorSystem, myActor: ActorRef) extends ScalatraServlet with JacksonJsonSupport with FutureSupport {
@@ -42,39 +37,10 @@ class PopServer(system: ActorSystem, myActor: ActorRef) extends ScalatraServlet 
     //Sengind the val future to the client that sent the get to root
   }
 
-  get("/user/:id/:name"){
+  get("/user"){
     "user"
   }
 
 }
 
-class PopServerTyped(system: TAS[TeamManagerCommand]) extends ScalatraServlet with JacksonJsonSupport with FutureSupport {
-  protected implicit def executor: ExecutionContext = system.executionContext
-  protected implicit val jsonFormats: Formats = DefaultFormats
-
-   before() {
-    contentType = formats("json")
-  }
-
-  get("/") {
-    //timeout required for the use of future
-    implicit val timeout: Timeout = 5.seconds
-    //Getting a val from myActor when asking with "One"
-    Map("team" -> "Mael")
-    //Sengind the val future to the client that sent the get to root
-  }
-
-  get("/createTeam/:id/:memeber") {
-    implicit val scheduler: akka.actor.typed.Scheduler = system.scheduler
-    //timeout required for the use of future
-    implicit val timeout: Timeout = 5.seconds
-    system.ask(replyTo =>
-    CreateTeam("team23", List("Dzen22", "Mael22"), replyTo))
-  }
-
-  get("/tl/:list") {
-    multiParams("id")
-  }
-
-}
 
