@@ -1,7 +1,7 @@
 from smbus import SMBus
 from Phidget22.Devices.RFID import *
 from Phidget22.Devices.TemperatureSensor import *
-import time, functools
+import time, functools, threading
 
 bus = SMBus(1) # indicates /dev/ic2-1
 addr1 = 0x8
@@ -93,6 +93,13 @@ def get_temperature(tempSensor):
 	temperature = tempSensor.getTemperature()
 	print("Temperature : " + str(temperature))
     
+from threading import Timer
+
+class Repeat(Timer):
+    def run(self):
+        while not self.finished.wait(self.interval):
+            self.function(*self.args, **self.kwargs)
+
 # To give a tag to the badge
 # while True: 
 # 	ch.write("101112-0x8", RFIDProtocol.PROTOCOL_PHIDGETS, False)

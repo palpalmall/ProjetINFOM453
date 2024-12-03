@@ -37,14 +37,12 @@
 #     time.sleep(1)
 
 # ================================ TEST RFID ==================================
-from Phidget22.Devices.TemperatureSensor import *
-import time
+import json, time, threading
+from Utils_web_requests import *
+from Utils_RPi_Arduino import askForSmashedHead, onTag, RFID_init, Repeat, get_temperature, temperature_init
 
-tempSensor = TemperatureSensor()
-tempSensor.openWaitForAttachment(2000)
+tempSensor = temperature_init()
+# should be restarted after 24h (TODO)
 
-while True :
-    time.sleep(2)    
-    temperature = tempSensor.getTemperature()
-    print("Temperature : " + str(temperature))
-
+t = Repeat(1.0, lambda: get_temperature(tempSensor))
+t.start()

@@ -64,3 +64,11 @@ def post_mood(team_nbr, my_id, mood, url = url) :
     
     response = requests.post(url+'/post_mood',json=params)
     #check if response OK
+
+def post_temperature(team_nbr, my_id, temperature, url = url):
+    params = json.dumps(
+        {'team_nbr' : team_nbr,
+         'my_id' : my_id,
+         'temperature' : temperature})
+    
+    response = requests.post(url+'/post_temperature',json=params)
