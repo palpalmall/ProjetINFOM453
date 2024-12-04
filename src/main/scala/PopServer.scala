@@ -58,7 +58,7 @@ class PopServerTyped(system: TAS[TeamManagerCommand]) extends ScalatraServlet wi
    before() {
     contentType = formats("json")
   }
-
+  
   get("/") {
     //timeout required for the use of future
     implicit val timeout: Timeout = 5.seconds
@@ -67,12 +67,26 @@ class PopServerTyped(system: TAS[TeamManagerCommand]) extends ScalatraServlet wi
     //Sengind the val future to the client that sent the get to root
   }
 
-  get("/createTeam/:id/:member") {
+  get("/createTeam/:id") {
+    val teamId = params("id")
     implicit val scheduler: akka.actor.typed.Scheduler = system.scheduler
     //timeout required for the use of future
     implicit val timeout: Timeout = 5.seconds
     system.ask(replyTo =>
-      CreateTeam("team1", List("Dzen1", "Mael1"), replyTo))
+      CreateTeam(teamId, List("Dzen1", "Mael1"), replyTo))
+  }
+  // Route pour créer une équipe si c'est mael qui demande la creation
+  post("/teams") {
+    implicit val scheduler = system.scheduler
+    implicit val timeout: Timeout = 5.seconds
+    val teamId = (parsedBody \ "id").extractOpt[String].getOrElse(halt(400, "Team ID is required"))
+    val members = (parsedBody \ "members").extractOpt[List[String]].getOrElse(List.empty)
+
+    val result: Future[Response] = system.ask(replyTo => CreateTeam(teamId, members, replyTo))
+    result.map {
+      case SuccessResponse(message) => Ok(Map("message" -> message))
+      case FailureResponse(error)   => BadRequest(Map("error" -> error))
+    }
   }
 
   get("/tl/:list") {

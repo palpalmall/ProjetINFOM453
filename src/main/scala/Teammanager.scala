@@ -20,7 +20,7 @@ object TeamManagerActor {
         createResult match {
           case Right(successMessage) =>
             members.foreach(member => teams(id)._1 ! AddMember(member, replyTo))
-            replyTo ! SuccessResponseTest(Map("OK" -> "GUUD"))
+            replyTo ! SuccessResponseTest(Map("messagesucces" -> successMessage))
           case Left(errorMessage) =>
             replyTo ! FailureResponse(errorMessage)
         }
