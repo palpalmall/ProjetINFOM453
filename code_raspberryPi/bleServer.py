@@ -16,7 +16,8 @@ from bless import (  # type: ignore
     GATTAttributePermissions,
 )
 
-test_structure = {"wifi_name" : "", "wifi_password" : ""} #Ajout Mael
+wifi_structure = {"wifi_name" : "", "wifi_password" : ""} #Ajout Mael
+ids_structure = {"id_figurine" : "", "id_team" : ""}
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(name=__name__)
@@ -35,11 +36,11 @@ def read_request(characteristic: BlessGATTCharacteristic, **kwargs) -> bytearray
 
 def try_to_connect_wifi():
 	
-    print(test_structure["wifi_name"])
-    print(test_structure["wifi_password"])
+    print(wifi_structure["wifi_name"])
+    print(wifi_structure["wifi_password"])
 	
-    if(test_structure["wifi_name"] != "" and test_structure["wifi_password"] != ""):
-	    return configure_wifi(test_structure["wifi_name"], test_structure["wifi_password"])
+    if(wifi_structure["wifi_name"] != "" and wifi_structure["wifi_password"] != ""):
+	    return configure_wifi(wifi_structure["wifi_name"], wifi_structure["wifi_password"])
 
 def write_request(characteristic: BlessGATTCharacteristic, value: Any, **kwargs):
     characteristic.value = value
@@ -48,29 +49,52 @@ def write_request(characteristic: BlessGATTCharacteristic, value: Any, **kwargs)
         trigger.set()
 
     # Ajout Mael
+    # for wifi name
     if (characteristic.uuid == "51ff12bb-3ed8-46e5-b4f9-d64e2fec021b"):
         characteristic.value = value
         logger.debug(f"wifi name is : {characteristic.value}")
         
-        if(test_structure["wifi_name"] != ""):
-            test_structure["wifi_name"] = str(test_structure["wifi_name"]) + characteristic.value.decode("utf-8")
+        if(wifi_structure["wifi_name"] != ""):
+            wifi_structure["wifi_name"] = str(wifi_structure["wifi_name"]) + characteristic.value.decode("utf-8")
         else :
-            test_structure["wifi_name"] = characteristic.value.decode("utf-8")
+            wifi_structure["wifi_name"] = characteristic.value.decode("utf-8")
 
+    # for wifi password
     if(characteristic.uuid == "51ff12bb-3ed8-46e5-b4f9-d64e2fec021c") :
         characteristic.value = value
         logger.debug(f"wifi password is : {characteristic.value}")
         
-        if(test_structure["wifi_password"] != ""):
-            test_structure["wifi_password"] = str(test_structure["wifi_password"]) + characteristic.value.decode("utf-8")
+        if(wifi_structure["wifi_password"] != ""):
+            wifi_structure["wifi_password"] = str(wifi_structure["wifi_password"]) + characteristic.value.decode("utf-8")
         else :
-            test_structure["wifi_password"] = characteristic.value.decode("utf-8")
+            wifi_structure["wifi_password"] = characteristic.value.decode("utf-8")
     
-    print(test_structure)
+    # for our id figurine
+    if(characteristic.uuid == "51ff12bb-3ed8-46e5-b4f9-d64e2fec021d") :
+        characteristic.value = value
+        logger.debug(f"id figurine is : {characteristic.value}")
+        
+        if(ids_structure["id_figurine"] != ""):
+            ids_structure["id_figurine"] = str(ids_structure["id_figurine"]) + characteristic.value.decode("utf-8")
+        else :
+            ids_structure["id_figurine"] = characteristic.value.decode("utf-8")
+    
+    # for our team id
+    if(characteristic.uuid == "51ff12bb-3ed8-46e5-b4f9-d64e2fec021e") :
+        characteristic.value = value
+        logger.debug(f"id team is : {characteristic.value}")
+        
+        if(ids_structure["id_team"] != ""):
+            ids_structure["id_team"] = str(ids_structure["id_team"]) + characteristic.value.decode("utf-8")
+        else :
+            ids_structure["id_team"] = characteristic.value.decode("utf-8")
+    
+    print(wifi_structure)
     response = try_to_connect_wifi()
     print("response = %s" %response)
-    if(response) :
-	    pass
+
+    if(ids_structure["id_figurine"] != "" and ids_structure["id_team"] != "" ):
+        trigger.set()
     #Fin ajout Mael
 
 
@@ -86,63 +110,34 @@ async def run(loop):
     my_service_uuid = "A07498CA-AD5B-474E-940D-16F1FBE7E8CD"
     await server.add_new_service(my_service_uuid)
 
-    # Add a Characteristic to the service
-    my_char_uuid_wifi_name = "51FF12BB-3ED8-46E5-B4F9-D64E2FEC021B"
     char_flags = (
         GATTCharacteristicProperties.read
         | GATTCharacteristicProperties.write
         | GATTCharacteristicProperties.indicate
     )
+    
     permissions = GATTAttributePermissions.readable | GATTAttributePermissions.writeable
+    
+    # Add a Characteristic to the service
+    my_char_uuid_wifi_name = "51FF12BB-3ED8-46E5-B4F9-D64E2FEC021B"
     await server.add_new_characteristic(
         my_service_uuid, my_char_uuid_wifi_name, char_flags, None, permissions
     )
     
     my_char_uuid_wifi_password = "51FF12BB-3ED8-46E5-B4F9-D64E2FEC021C"
-    char_flags = (
-        GATTCharacteristicProperties.read
-        | GATTCharacteristicProperties.write
-        | GATTCharacteristicProperties.indicate
-    )
-    permissions = GATTAttributePermissions.readable | GATTAttributePermissions.writeable
     await server.add_new_characteristic(
         my_service_uuid, my_char_uuid_wifi_password, char_flags, None, permissions
     )
 
-    # Ajout Mael
-    # mael_service_uuid = "A07498CA-AD5B-474E-940D-16F1FBE7E8CE"
-    # await server.add_new_service(mael_service_uuid)
+    my_char_uuid_id_figurine = "51FF12BB-3ED8-46E5-B4F9-D64E2FEC021D"
+    await server.add_new_characteristic(
+        my_service_uuid, my_char_uuid_wifi_name, char_flags, None, permissions
+    )
 
-    # mael_char_uuid_wifi_name = "51FF12BB-3ED8-46E5-B4F9-D64E2FEC021C"
-    # char_flags = (
-        # GATTCharacteristicProperties.read
-        # | GATTCharacteristicProperties.write
-        # | GATTCharacteristicProperties.indicate
-    # )
-    # permissions = GATTAttributePermissions.readable | GATTAttributePermissions.writeable
-    # await server.add_new_characteristic(
-        # mael_service_uuid, mael_char_uuid_wifi_name, char_flags, None, permissions
-    # )
-
-    # mael_char_uuid_wifi_password = "51FF12BB-3ED8-46E5-B4F9-D64E2FEC021D"
-    # char_flags = (
-        # GATTCharacteristicProperties.read
-        # | GATTCharacteristicProperties.write
-        # | GATTCharacteristicProperties.indicate
-    # )
-    # permissions = GATTAttributePermissions.readable | GATTAttributePermissions.writeable
-    # await server.add_new_characteristic(
-        # mael_service_uuid, mael_char_uuid_wifi_password, char_flags, None, permissions
-    # )
-   
-    # logger.debug(server.get_service(mael_service_uuid))
-    # logger.debug(server.get_characteristic(mael_char_uuid_wifi_name))
-    # logger.debug(server.get_characteristic(mael_char_uuid_wifi_password))
-    # server.get_characteristic(mael_char_uuid_wifi_name)
-    # server.get_characteristic(mael_char_uuid_wifi_password)
-    # server.update_value(mael_service_uuid, "51FF12BB-3ED8-46E5-B4F9-D64E2FEC021C")
-    # server.update_value(mael_service_uuid, "51FF12BB-3ED8-46E5-B4F9-D64E2FEC021D")
-    #Fin ajout Mael
+    my_char_uuid_id_team = "51FF12BB-3ED8-46E5-B4F9-D64E2FEC021E"
+    await server.add_new_characteristic(
+        my_service_uuid, my_char_uuid_wifi_name, char_flags, None, permissions
+    )
 
     logger.debug(server.get_characteristic(my_char_uuid_wifi_name))
     logger.debug(server.get_characteristic(my_char_uuid_wifi_password))
@@ -155,14 +150,16 @@ async def run(loop):
         await trigger.wait()
 
     await asyncio.sleep(2)
-    logger.debug("Updating")
-    logger.debug(server.get_service(my_service_uuid))
-    server.get_characteristic(my_char_uuid_wifi_name)
-    server.update_value(my_service_uuid, "51FF12BB-3ED8-46E5-B4F9-D64E2FEC021B")
+    #logger.debug("Updating")
+    #logger.debug(server.get_service(my_service_uuid))
+    #server.get_characteristic(my_char_uuid_wifi_name)
+    #server.update_value(my_service_uuid, "51FF12BB-3ED8-46E5-B4F9-D64E2FEC021B")
 
     await asyncio.sleep(5)
     await server.stop()
+    return ids_structure
 
 
 loop = asyncio.get_event_loop()
-loop.run_until_complete(run(loop))
+ids = loop.run_until_complete(run(loop))
+print(ids)
