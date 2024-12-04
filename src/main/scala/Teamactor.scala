@@ -60,6 +60,14 @@ object TeamActor {
             replyTo ! FailureResponse(s"Member $member est pas dans equipe $id")
         }
         Behaviors.same
+     case GetPingersMember(member, replyTo) =>
+          members.get(member) match {
+            case Some(userActor) =>
+              userActor ! GetPingers(replyTo)
+            case None =>
+              replyTo ! FailureResponse(s"Le membre $member n'existe pas dans l'équipe")
+    }
+        Behaviors.same
 
       case PingMember(member, by, replyTo) =>
         members.get(member) match {
