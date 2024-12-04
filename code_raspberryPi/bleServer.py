@@ -43,6 +43,7 @@ def try_to_connect_wifi():
 	    return configure_wifi(wifi_structure["wifi_name"], wifi_structure["wifi_password"])
 
 def write_request(characteristic: BlessGATTCharacteristic, value: Any, **kwargs):
+    print(characteristic.uuid)
     characteristic.value = value
     if characteristic.value == b"\x0f":
         logger.debug("NICE")
@@ -90,8 +91,8 @@ def write_request(characteristic: BlessGATTCharacteristic, value: Any, **kwargs)
             ids_structure["id_team"] = characteristic.value.decode("utf-8")
     
     print(wifi_structure)
-    response = try_to_connect_wifi()
-    print("response = %s" %response)
+    # response = try_to_connect_wifi()
+    # print("response = %s" %response)
 
     if(ids_structure["id_figurine"] != "" and ids_structure["id_team"] != "" ):
         trigger.set()
@@ -131,16 +132,18 @@ async def run(loop):
 
     my_char_uuid_id_figurine = "51FF12BB-3ED8-46E5-B4F9-D64E2FEC021D"
     await server.add_new_characteristic(
-        my_service_uuid, my_char_uuid_wifi_name, char_flags, None, permissions
+        my_service_uuid, my_char_uuid_id_figurine, char_flags, None, permissions
     )
 
     my_char_uuid_id_team = "51FF12BB-3ED8-46E5-B4F9-D64E2FEC021E"
     await server.add_new_characteristic(
-        my_service_uuid, my_char_uuid_wifi_name, char_flags, None, permissions
+        my_service_uuid, my_char_uuid_id_team, char_flags, None, permissions
     )
 
     logger.debug(server.get_characteristic(my_char_uuid_wifi_name))
     logger.debug(server.get_characteristic(my_char_uuid_wifi_password))
+    logger.debug(server.get_characteristic(my_char_uuid_id_figurine))
+    logger.debug(server.get_characteristic(my_char_uuid_id_team))
     await server.start()
     logger.debug("Advertising")
     logger.info(f"Write '0xF' to the advertised characteristic: {my_char_uuid_wifi_name}")
@@ -162,4 +165,5 @@ async def run(loop):
 
 loop = asyncio.get_event_loop()
 ids = loop.run_until_complete(run(loop))
+print("ids structure : ")
 print(ids)
