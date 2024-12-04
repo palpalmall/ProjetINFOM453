@@ -21,6 +21,7 @@ import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.util.{Failure, Success, Try}
 import akka.actor.typed.scaladsl.AskPattern.Askable
 import akka.actor.typed.SpawnProtocol
+import scala.annotation.meta.param
 
 
 //Scalatra servlet that has a behavior for each path in URL.
@@ -64,17 +65,32 @@ class PopServerTyped(system: TAS[TeamManagerCommand]) extends ScalatraServlet wi
     //Sengind the val future to the client that sent the get to root
   }
 
-  get("/createTeam/:id/:memeber") {
+  get("/createTeam/:id/:member") {
     implicit val scheduler: akka.actor.typed.Scheduler = system.scheduler
     //timeout required for the use of future
     implicit val timeout: Timeout = 5.seconds
     system.ask(replyTo =>
-    CreateTeam("team23", List("Dzen22", "Mael22"), replyTo))
+      CreateTeam("team1", List("Dzen1", "Mael1"), replyTo))
   }
 
   get("/tl/:list") {
     multiParams("id")
   }
+
+  get("/future/:id/:member"){
+    implicit val scheduler: akka.actor.typed.Scheduler = system.scheduler
+    //timeout required for the use of future
+    implicit val timeout: Timeout = 5.seconds
+    val result: Future[Response] = system.ask(ref => CreateTeam("team122", List("Dzen122", "Mael122"), ref))
+    result.map {
+      case SuccessResponse(message) => Ok(Map("message" -> message))
+      case FailureResponse(error)   => BadRequest(Map("error" -> error))
+      case SuccessResponseTest(map) => Ok(Map("caca"->"pipi"))
+    }
+      
+  }
+
+  
 
 }
 
