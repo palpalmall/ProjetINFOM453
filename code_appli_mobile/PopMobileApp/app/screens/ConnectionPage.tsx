@@ -11,9 +11,14 @@ function Connection({navigation}: {navigation: any}){
   const handleConnection = async () => {
     //let response = await fetch(serverURL, )
     //response = await response.json()
+    let figurine_id = "101112"
+    let team_id = "32"
     let response = (nameInput.current === "Jose" && passwordInput.current === "Test") 
     if(response){
-      navigation.navigate("Home", {userName : nameInput.current})
+      navigation.navigate("Home", {
+        userName : nameInput.current,
+        figurine_id : figurine_id,
+        team_id : team_id})
     }
 
     setServerResponse(!response)

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 function Home({navigation, route}: {navigation: any, route : any}){
   
-  const {userName} = route.params // get params from connection page navigate
+  const {userName, figurine_id, team_id} = route.params // get params from connection page navigate
   const [selectedStatus, setSelectedStatus] = useState(-1)
   const [selectedSmiley, setSelectedSmiley] = useState(-1)
   const moodInputRef = useRef("")
@@ -29,7 +29,10 @@ function Home({navigation, route}: {navigation: any, route : any}){
     }
 
     //checkIfConfigDone()
-    //navigation.navigate('Configuration', {userName : userName})
+    navigation.navigate('Configuration', {
+        userName : userName,
+        figurine_id : figurine_id,
+        team_id : team_id})
   },[])
 
   return(

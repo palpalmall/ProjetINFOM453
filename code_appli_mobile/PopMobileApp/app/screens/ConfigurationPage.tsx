@@ -407,8 +407,8 @@ function Configuration({navigation, route}: {navigation: any, route : any}){
     
     const wifi_name_char = "51FF12BB-3ED8-46E5-B4F9-D64E2FEC021B"
     const wifi_password_char = "51FF12BB-3ED8-46E5-B4F9-D64E2FEC021C"
-    const figurine_id_char = "51FF12BB-3ED8-46E5-B4F9-D64E2FEC021C"
-    const team_id_char = "51FF12BB-3ED8-46E5-B4F9-D64E2FEC021C"
+    const figurine_id_char = "51FF12BB-3ED8-46E5-B4F9-D64E2FEC021D"
+    const team_id_char = "51FF12BB-3ED8-46E5-B4F9-D64E2FEC021E"
 
     await BleManager.writeWithoutResponse(connectedDeviceId.current, service_send_wifi_data, wifi_name_char, [...Buffer.from(wifiName, "utf-8")])//"FFF0", "FFF3", [...Buffer.from(wifiName, "utf-8")])
     await BleManager.writeWithoutResponse(connectedDeviceId.current, service_send_wifi_data, wifi_password_char, [...Buffer.from(wifiPassword, "utf-8")])
