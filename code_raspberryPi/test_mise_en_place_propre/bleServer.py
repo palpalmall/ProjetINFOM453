@@ -163,7 +163,7 @@ async def run(loop):
     return ids_structure
 
 
-loop = asyncio.get_event_loop()
-ids = loop.run_until_complete(run(loop))
-print("ids structure : ")
-print(ids)
+# loop = asyncio.get_event_loop()
+# ids = loop.run_until_complete(run(loop))
+# print("ids structure : ")
+# print(ids)
