@@ -1,24 +1,21 @@
 import { useRef, useState } from "react";
-import { Platform, SafeAreaView, StyleSheet, StatusBar, Text, TextInput, View, TouchableOpacity } from "react-native"
+import { Platform, SafeAreaView, StyleSheet, StatusBar, Text, TextInput, View, TouchableOpacity} from "react-native"
 
 function Connection({navigation}: {navigation: any}){
 
   const serverURL = ""
-  let nameInput = useRef("")
-  let passwordInput = useRef("")
+  let figIdInput = useRef("")
+  let teamIdInput = useRef("")
   const [serverResponse, setServerResponse] = useState(false)
 
   const handleConnection = async () => {
     //let response = await fetch(serverURL, )
     //response = await response.json()
-    let figurine_id = "101112"
-    let team_id = "32"
-    let response = (nameInput.current === "Jose" && passwordInput.current === "Test") 
+    let response = (figIdInput.current === "101112" && teamIdInput.current === "32") 
     if(response){
       navigation.navigate("Home", {
-        userName : nameInput.current,
-        figurine_id : figurine_id,
-        team_id : team_id})
+        figurine_id : figIdInput.current,
+        team_id : teamIdInput.current})
     }
 
     setServerResponse(!response)
@@ -28,8 +25,8 @@ function Connection({navigation}: {navigation: any}){
     <>
       <SafeAreaView style={styles.container}>
         {serverResponse && <Text style={styles.alertMessage}>Le mot de passe ou le nom utilisateur est incorrect</Text>}
-        <TextInput onChangeText={(newName) => {nameInput.current = newName}} placeholder="Name" style={styles.nameInput}></TextInput>
-        <TextInput secureTextEntry={true} onChangeText={(newPsw) => {passwordInput.current = newPsw}} placeholder="password" style={styles.passwordInput}></TextInput>
+        <TextInput keyboardType={Platform.OS === "android" ? "numeric" : "number-pad"} onChangeText={(newFigId) => {figIdInput.current = newFigId}} placeholder="Your figurine's ID" style={styles.figIdInput}></TextInput>
+        <TextInput keyboardType={Platform.OS === "android" ? "numeric" : "number-pad"} onChangeText={(newTeamId) => {teamIdInput.current = newTeamId}} placeholder="Your team's ID" style={styles.teamIdInput}></TextInput>
         <TouchableOpacity onPress={handleConnection} style={styles.connectionButton}>
           <Text style={styles.connectionTextButton}>Connection</Text>
         </TouchableOpacity>
@@ -57,7 +54,7 @@ const styles = StyleSheet.create({
     marginBottom : "5%",
     padding : 10
   },
-  nameInput:{
+  figIdInput:{
     width : "100%",
     height : "10%",
     borderColor:"black",
@@ -66,7 +63,7 @@ const styles = StyleSheet.create({
     padding : 15,
     marginBottom : "5%"
   },
-  passwordInput:{
+  teamIdInput:{
     width : "100%",
     height : "10%",
     borderColor:"black",
