@@ -9,20 +9,50 @@
  
 // Include the Wire library for I2C
 #include <Wire.h>
-#include <Servo.h>
+#include <LiquidCrystal.h>
 
 // LED on pin 13
-const int buttonPin = 7;
-const int ledPin = 6; // onboard pin
-const int REDPin = 4; //PWM PIN
-const int GREENPin = 3; //PWM PIN
-const int BLUEPin = 2; //PWM PIN
-bool teteFrappe = false;
-const int analogPin = 0;
+const int buttonPin = A1;
+const int REDPin = 3; //PWM PIN
+const int GREENPin = 2; //PWM PIN
+const int BLUEPin = 1; //PWM PIN
+bool smashedHead = false;
+// initialize the library with the numbers of the MKR Pin: ( From D0 to D5 )
+LiquidCrystal lcd(4, 5, 6, 7, 8, 9);
 
-Servo myservo;
-const int servoPin = 5; // PWM PIN
-int pos = 0;
+// optionnal
+byte heart[8] = {
+  0b00000,
+  0b01010,
+  0b11111,
+  0b11111,
+  0b11111,
+  0b01110,
+  0b00100,
+  0b00000
+};
+
+byte smiley[8] = {
+  0b00000,
+  0b00000,
+  0b01010,
+  0b00000,
+  0b00000,
+  0b10001,
+  0b01110,
+  0b00000
+};
+
+byte frownie[8] = {
+  0b00000,
+  0b00000,
+  0b01010,
+  0b00000,
+  0b00000,
+  0b00000,
+  0b01110,
+  0b10001
+};
  
 void setup() {
   Serial.begin(9600); //to print analog data
@@ -39,17 +69,16 @@ void setup() {
   // For the button, to click on figurine's head
   pinMode(buttonPin, INPUT_PULLUP);  
   
-  // Setup pin 13 and RGB pins as output and turn LEDs off
-  pinMode(ledPin, OUTPUT);
+  // Setup RGB pins as output and turn LEDs off
   pinMode(REDPin, OUTPUT);
   pinMode(GREENPin, OUTPUT);
   pinMode(BLUEPin, OUTPUT);
   // on eteind les pins RGB
   shutDownRGBLED();
-  digitalWrite(ledPin, LOW); //on eteind la onboard led
 
-  myservo.attach(servoPin);
-  myservo.write(0);
+  // initialize LCD and set up the number of columns and rows:
+  lcd.begin(16, 2);
+  lcd.setCursor(0, 0);
 }
  
 // Function that executes whenever data is received from master
@@ -68,24 +97,34 @@ void receiveEvent(int howMany) {
         print("data = ", data);
         if(data == 0){ // status = absent donc lumiere rouge
           analogWrite(REDPin, 255);
-          digitalWrite(GREENPin, LOW);
-          digitalWrite(BLUEPin, LOW);
-        }else{ // status = present donc lumiere verte
+          analogWrite(GREENPin, LOW);
+          analogWrite(BLUEPin, LOW);
+        }
+        else if(data == 1){
+          analogWrite(REDPin, 255);
           analogWrite(GREENPin, 255);
-          digitalWrite(REDPin, LOW);
-          digitalWrite(BLUEPin, LOW);
+          analogWrite(BLUEPin, LOW);
+        }
+        else if{ // status = present donc lumiere verte
+          analogWrite(GREENPin, 255);
+          analogWrite(REDPin, LOW);
+          analogWrite(BLUEPin, LOW);
         }
         break;}
 
-      case 1 :{ // onboard LED action (WRITE)
+      case 1 :{ //ping LED action (WRITE)
         int data = Wire.read(); // n'en a que si on recoit un write et pas un read
         print("data = ", data);
         digitalWrite(ledPin, data);
         break;}
 
-      case 4 :{
+      case 4 :{// lcd screen case
         int data = Wire.read();
-        testServo();
+        lcd.home();
+        // cast byte to string
+        String message = "I test lcd";
+        lcd.print(message);
+        // lcd screen
         break;}
 
     }
@@ -99,12 +138,12 @@ void requestEvent(){ // launched when master makes a read (request)
 
   switch(request){
     case 2:{
-      Wire.write(teteFrappe);
-      teteFrappe = false;
+      Wire.write(smashedHead);
+      smashedHead = false;
       break;
     }
 
-    case 3:{
+    case 3:{ // no use in the project
       Wire.write("hello");
       break;
     }
@@ -122,28 +161,14 @@ void print(String text,int data){
   Serial.print("\n");
 }
 
-void testServo(){
-  for (pos = 0; pos <= 180; pos += 1) { // goes from 0 degrees to 180 degrees
-    // in steps of 1 degree
-    myservo.write(pos);              // tell servo to go to position in variable 'pos'
-    delay(5);                       // waits 15ms for the servo to reach the position
-  }
-  for (pos = 180; pos >= 0; pos -= 1) { // goes from 180 degrees to 0 degrees
-    myservo.write(pos);              // tell servo to go to position in variable 'pos'
-    delay(5);                       // waits 15ms for the servo to reach the position
-  }
-}
-
 void buttonPressed(){
   if (digitalRead(buttonPin) == LOW)
   {
-    teteFrappe = true;
+    smashedHead = true;
   }
 }
 
 void loop() {
   delay(100);
   buttonPressed();
-  //Serial.print(analogRead(analogPin));
-  //Serial.print("\n");
 }
