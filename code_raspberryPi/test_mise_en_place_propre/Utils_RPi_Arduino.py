@@ -22,7 +22,7 @@ exempleStatusReceived = {
 def activate_ping_figurine(id_figurine):
   print("ping figurine %d" %id_figurine)
   addr = NamesAddrDico[id_figurine]
-  bus.write_i2c_block_data(addr,4, [1]) # switch servo motor on
+  bus.write_i2c_block_data(addr,1, [1]) # switch servo motor on
 		
 def activate_status_figurine(id_figurine, status):
   addr =  NamesAddrDico[id_figurine]
@@ -42,7 +42,7 @@ def activate_mood_figurine(id_figurine, mood):
   print("mood is %s" %mood)
   addr =  NamesAddrDico[id_figurine]
   message = [ord(character) for character in mood] # tranform mood message into a ascii code list
-  bus.write_i2c_block_data(addr, 3, message)
+  bus.write_i2c_block_data(addr, 4, message)
 
 # envoit aux arduinos la valeur de status pour chaque figurine
 # action nbr = 0
