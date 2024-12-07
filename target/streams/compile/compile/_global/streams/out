@@ -78,5 +78,5 @@
 [0m[[0m[33mwarn[0m] [0m[0m[33m    |[0mIt would fail on pattern case: actors.TeamInfo(_, _), actors.StatusResponse(_, _), actors.MoodResponse(_, _), actors.PingResponse(_, _), actors.SuccessResponseTest(_), actors.PingersResponse(_)[0m
 [0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[0m
 [0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m longer explanation available when compiling with `-explain`[0m
-[0m[[0m[33mwarn[0m] [0m[0mthere were 12 deprecation warnings; re-run with -deprecation for details[0m
+[0m[[0m[33mwarn[0m] [0m[0mthere were 3 deprecation warnings; re-run with -deprecation for details[0m
 [0m[[0m[33mwarn[0m] [0m[0m11 warnings found[0m

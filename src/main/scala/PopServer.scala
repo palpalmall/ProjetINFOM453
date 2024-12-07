@@ -126,13 +126,13 @@ class PopServerTyped(system: TAS[TeamManagerCommand]) extends ScalatraServlet wi
   }
   
   // Route pour envoyer un ping d'un membre à un autre
-  post("/ping") {
+  post("/ping/:team_id/:from/:to") {
     println(parsedBody)
     implicit val scheduler = system.scheduler
     implicit val timeout: Timeout = 5.seconds
-    val team_id = (parsedBody \ "team_id").extractOpt[String].getOrElse(halt(400, Map("message" -> "il faut le team_id")))
-    val from = (parsedBody \ "from").extractOpt[String].getOrElse(halt(400, Map("message" -> "qui envoie ça ?")))
-    val to = (parsedBody \ "to").extractOpt[String].getOrElse(halt(400, Map("message" -> "qui reçoit ?")))
+    val team_id = params("team_id")
+    val from = params("from")
+    val to = params("to")
     
     println("post ping"+ team_id+ from+ to)
 
@@ -190,12 +190,12 @@ class PopServerTyped(system: TAS[TeamManagerCommand]) extends ScalatraServlet wi
   }
   
   // Route pour mettre à jour le statut d'un membre ca c'est si il y'a id et member dans l'url on peut faire si c'est juste le json 
-  post("/status") {
+  post("/status/:team_id/:member_id/:status") {
     implicit val scheduler = system.scheduler
     implicit val timeout: Timeout = 5.seconds
-    val team_id = (parsedBody \ "team_id").extractOpt[String].getOrElse(halt(400, Map("message" -> "il faut le team_id")))
-    val member_id = (parsedBody \ "member_id").extractOpt[String].getOrElse(halt(400, Map("message" -> "il faut le member_id")))
-    val status = (parsedBody \ "status").extractOpt[String].getOrElse(halt(400, Map("message" -> "il faut le status")))
+    val team_id = params("team_id")
+    val member_id = params("member_id")
+    val status = params("status")
 
     println("post status"+ team_id+ member_id+ status)
 
@@ -224,12 +224,12 @@ class PopServerTyped(system: TAS[TeamManagerCommand]) extends ScalatraServlet wi
   }
   
   // Route pour mettre à jour l'humeur d'un membre c'est si il y'a id et member dans l'url on peut faire autrement si c'est juste le json 
-  post("/mood") {
+  post("/mood/:team_id/:member_id/:mood") {
     implicit val scheduler = system.scheduler
     implicit val timeout: Timeout = 5.seconds
-    val team_id = (parsedBody \ "team_id").extractOpt[String].getOrElse(halt(400, Map("message" -> "il faut le team_id")))
-    val member_id = (parsedBody \ "member_id").extractOpt[String].getOrElse(halt(400, Map("message" -> "il faut le member_id")))
-    val mood = (parsedBody \ "mood").extractOpt[String].getOrElse(halt(400, Map("message" -> "il faut le mood")))
+    val team_id = params("team_id")
+    val member_id = params("member_id")
+    val mood = params("mood")
 
     println("post mood"+ team_id+ member_id+ mood)
 

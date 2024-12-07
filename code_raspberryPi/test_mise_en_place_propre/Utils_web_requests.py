@@ -36,43 +36,23 @@ def get_mood(team_id, member_id, url = url) :
 
 #------------- POST methods --------------
 
-def post_ping(team_id, from_fig, to_fig, url = url) :
-    params = json.dumps(
-        {'team_id' : team_id,
-         'from' : from_fig,
-         'to' : to_fig})
-    
-    response = requests.post(url+'/ping',json=params)
+def post_ping(team_id, from_fig, to_fig, url = url) : 
+    response = requests.post(url+'/ping/'+str(team_id)+'/'+str(from_fig)+'/'+str(to_fig))
     print(json.loads(response.text))
     #check if response OK
 
 def post_status(team_id, member_id, status, url = url) :
-    params = json.dumps(
-        {'team_id' : team_id,
-         'member_id' : member_id,
-         'status' : status})
-    
-    response = requests.post(url+'/status',json=params)
+    response = requests.post(url+'/status/'+str(team_id)+'/'+str(member_id)+'/'+str(status))
     print(json.loads(response.text))
     #check if response OK
 
 def post_mood(team_id, member_id, mood, url = url) :
-    params = json.dumps(
-        {'team_id' : team_id,
-         'member_id' : member_id,
-         'mood' : mood})
-    
-    response = requests.post(url+'/mood',json=params)
+    response = requests.post(url+'/mood/'+str(team_id)+'/'+str(member_id)+'/'+str(mood))
     print(json.loads(response.text))
     #check if response OK
 
 def post_temperature(team_id, member_id, temperature, url = url):
-    params = json.dumps(
-        {'team_id' : team_id,
-         'member_id' : member_id,
-         'temperature' : temperature})
-    
-    response = requests.post(url+'/temperature',json=params)
+    response = requests.post(url+'/temperature/'+str(team_id)+'/'+str(member_id)+'/'+str(temperature))
     print(json.loads(response.text))
 
 def test_url(url, team_id = 0, member_id = 0):
