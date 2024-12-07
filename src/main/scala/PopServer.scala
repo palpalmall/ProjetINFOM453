@@ -105,22 +105,46 @@ class PopServerTyped(system: TAS[TeamManagerCommand]) extends ScalatraServlet wi
     }
       
   }
+  // ================= PING ======================
   // c'est si il y'a id et member dans l'url on peut faire autrement si c'est juste un objet json 
-  get("/teams/:id/members/:member/pingers") {
-  val teamId = params("id")
-  val member = params("member")
+  get("/ping/:team_id/:member_id") {
+  val team_id = params("team_id")
+  val member_id = params("member_id")
+  
+  println("get ping"+ team_id+ member_id)
+  
   implicit val scheduler: akka.actor.typed.Scheduler = system.scheduler
   implicit val timeout: Timeout = 5.seconds
-  val result: Future[Response] = system.ask(ref => GetPingersTeamMember(teamId, member, ref))
+  val result: Future[Response] = system.ask(ref => GetPingersTeamMember(team_id, member_id, ref))
 
   result.map {
     case PingersResponse(pingers) =>
       Ok(Map("pingers" -> pingers))
     case FailureResponse(error) =>
       BadRequest(Map("error" -> error))
+    }
   }
-}
- // Route pour récupérer les informations d'une équipe jsp si c'est necessaire pour nous
+  
+  // Route pour envoyer un ping d'un membre à un autre
+  post("/ping") {
+    println(parsedBody)
+    implicit val scheduler = system.scheduler
+    implicit val timeout: Timeout = 5.seconds
+    val team_id = (parsedBody \ "team_id").extractOpt[String].getOrElse(halt(400, Map("message" -> "il faut le team_id")))
+    val from = (parsedBody \ "from").extractOpt[String].getOrElse(halt(400, Map("message" -> "qui envoie ça ?")))
+    val to = (parsedBody \ "to").extractOpt[String].getOrElse(halt(400, Map("message" -> "qui reçoit ?")))
+    
+    println("post ping"+ team_id+ from+ to)
+
+    val result: Future[Response] = system.ask(replyTo => PingTeamMember(team_id, from, to, replyTo))
+    result.map {
+      case PingResponse(sender, rec) => Ok(Map("message" -> s"Ping  de $sender to $rec"))
+      case FailureResponse(error)         => BadRequest(Map("error" -> error))
+    }
+  }
+
+  // ======================= CREATION ============================
+  // Route pour récupérer les informations d'une équipe jsp si c'est necessaire pour nous
   get("/teams/:id") {
     implicit val scheduler = system.scheduler
     implicit val timeout: Timeout = 5.seconds
@@ -148,95 +172,77 @@ class PopServerTyped(system: TAS[TeamManagerCommand]) extends ScalatraServlet wi
     
   }
 
-  // Route pour mettre à jour le statut d'un membre ca c'est si il y'a id et member dans l'url on peut faire si c'est juste le json 
-  post("/teams/:id/members/:member/status") {
-    implicit val scheduler = system.scheduler
-    implicit val timeout: Timeout = 5.seconds
-    val teamId = params("id")
-    val member = params("member")
-    val status = (parsedBody \ "status").extractOpt[String].getOrElse(halt(400, "il faut le status"))
-
-    val result: Future[Response] = system.ask(replyTo => UpdateTeamMemberStatus(teamId, member, status, replyTo))
-    result.map {
-      case SuccessResponse(message) => Ok(Map("message" -> message))
-      case FailureResponse(error)   => BadRequest(Map("error" -> error))
-    }
-  }
-
+  // ===================== STATUS ===========================
   // Route pour récupérer le statut d'un membre c'est si il y'a id et member dans l'url on peut faire autrement  si c'est juste le json 
-  get("/teams/:id/members/:member/status") {
+  get("/status/:team_id/:member_id") {
     implicit val scheduler = system.scheduler
     implicit val timeout: Timeout = 5.seconds
-    val teamId = params("id")
-    val member = params("member")
+    val team_id = params("team_id")
+    val member_id = params("member_id")
 
-    val result: Future[Response] = system.ask(replyTo => GetTeamMemberStatus(teamId, member, replyTo))
+    println("get status"+ team_id+ member_id)
+
+    val result: Future[Response] = system.ask(replyTo => GetTeamMemberStatus(team_id, member_id, replyTo))
     result.map {
       case StatusResponse(name, status) => Ok(Map("name" -> name, "statut" -> status.getOrElse("N/A")))
       case FailureResponse(error)       => NotFound(Map("error" -> error))
     }
   }
-
-  // Route pour mettre à jour l'humeur d'un membre c'est si il y'a id et member dans l'url on peut faire autrement si c'est juste le json 
-  post("/teams/:id/members/:member/mood") {
+  
+  // Route pour mettre à jour le statut d'un membre ca c'est si il y'a id et member dans l'url on peut faire si c'est juste le json 
+  post("/status") {
     implicit val scheduler = system.scheduler
     implicit val timeout: Timeout = 5.seconds
-    val teamId = params("id")
-    val member = params("member")
-    val mood = (parsedBody \ "mood").extractOpt[String].getOrElse(halt(400, "il faut le mood"))
+    val team_id = (parsedBody \ "team_id").extractOpt[String].getOrElse(halt(400, Map("message" -> "il faut le team_id")))
+    val member_id = (parsedBody \ "member_id").extractOpt[String].getOrElse(halt(400, Map("message" -> "il faut le member_id")))
+    val status = (parsedBody \ "status").extractOpt[String].getOrElse(halt(400, Map("message" -> "il faut le status")))
 
-    val result: Future[Response] = system.ask(replyTo => UpdateTeamMemberMood(teamId, member, mood, replyTo))
+    println("post status"+ team_id+ member_id+ status)
+
+    val result: Future[Response] = system.ask(replyTo => UpdateTeamMemberStatus(team_id, member_id, status, replyTo))
     result.map {
       case SuccessResponse(message) => Ok(Map("message" -> message))
       case FailureResponse(error)   => BadRequest(Map("error" -> error))
     }
-    
   }
 
+  // ======================= MOOD ============================
   // Route pour récupérer l'humeur d'un membr
-  get("/teams/:id/members/:member/mood") {
+  get("/mood/:team_id/:member_id") {
     implicit val scheduler = system.scheduler
     implicit val timeout: Timeout = 5.seconds
-    val teamId = params("id")
-    val member = params("member")
+    val team_id = params("team_id")
+    val member_id = params("member_id")
 
-    val result: Future[Response] = system.ask(replyTo => GetTeamMemberMood(teamId, member, replyTo))
+    println("get mood"+ team_id+ member_id)
+
+    val result: Future[Response] = system.ask(replyTo => GetTeamMemberMood(team_id, member_id, replyTo))
     result.map {
       case MoodResponse(name, mood) => Ok(Map("name" -> name, "mood" -> mood.getOrElse("N/A")))
       case FailureResponse(error)   => NotFound(Map("error" -> error))
     }
   }
-
-  // Route pour envoyer un ping d'un membre à un autre
-  post("/teams/:id/ping") {
-    implicit val scheduler = system.scheduler
-    implicit val timeout: Timeout = 5.seconds
-    val teamId = params("id")
-    val from = (parsedBody \ "from").extractOpt[String].getOrElse(halt(400, "qui envoit ca ?"))
-    val to = (parsedBody \ "to").extractOpt[String].getOrElse(halt(400, "qui recoit ?"))
-
-    val result: Future[Response] = system.ask(replyTo => PingTeamMember(teamId, from, to, replyTo))
-    result.map {
-      case PingResponse(sender, rec) => Ok(Map("message" -> s"Ping  de $sender to $rec"))
-      case FailureResponse(error)         => BadRequest(Map("error" -> error))
-    }
-  }
-
-  // Route pour récupérer les pingers d'un membre
-  get("/teams/:id/members/:member/pingers") {
-    implicit val scheduler = system.scheduler
-    implicit val timeout: Timeout = 5.seconds
-    val teamId = params("id")
-    val member = params("member")
-
-    val result: Future[Response] = system.ask(replyTo => GetPingersTeamMember(teamId, member, replyTo))
-    result.map {
-      case PingersResponse(pingers) => Ok(Map("pingers" -> pingers))
-      case FailureResponse(error)   => BadRequest(Map("error" -> error))
-    }
-  }
-
   
+  // Route pour mettre à jour l'humeur d'un membre c'est si il y'a id et member dans l'url on peut faire autrement si c'est juste le json 
+  post("/mood") {
+    implicit val scheduler = system.scheduler
+    implicit val timeout: Timeout = 5.seconds
+    val team_id = (parsedBody \ "team_id").extractOpt[String].getOrElse(halt(400, Map("message" -> "il faut le team_id")))
+    val member_id = (parsedBody \ "member_id").extractOpt[String].getOrElse(halt(400, Map("message" -> "il faut le member_id")))
+    val mood = (parsedBody \ "mood").extractOpt[String].getOrElse(halt(400, Map("message" -> "il faut le mood")))
+
+    println("post mood"+ team_id+ member_id+ mood)
+
+    val result: Future[Response] = system.ask(replyTo => UpdateTeamMemberMood(team_id, member_id, mood, replyTo))
+    result.map {
+      case SuccessResponse(message) => Ok(Map("message" -> message))
+      case FailureResponse(error)   => BadRequest(Map("error" -> error))
+    } 
+  }
+
+  // ================================== TEMPERATURE ==========================
+  // post("/temperature"){}
+
 
 }
 

@@ -1,4 +1,4 @@
-[0m[[0m[33mwarn[0m] [0m[0m[33m[33m-- [E029] Pattern Match Exhaustivity Warning: C:\Users\rosny\Downloads\ProjetINFOM453\src\main\scala\PopServer.scala:87:6 [0m[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m[33m-- [E029] Pattern Match Exhaustivity Warning: D:\Document_D\Master_2\Projet_info_ambiante_mobile\code_projet\ProjetINFOM453\src\main\scala\PopServer.scala:87:6 [0m[0m[0m
 [0m[[0m[33mwarn[0m] [0m[0m[33m87 |[0m      [33mcase[0m SuccessResponse(message) => Ok(Map([31m"message"[0m -> message))[0m
 [0m[[0m[33mwarn[0m] [0m[0m[33m[33m   |[0m      ^[0m[0m
 [0m[[0m[33mwarn[0m] [0m[0m[33m   |[0m[33mmatch[0m may not be exhaustive.[0m
@@ -6,7 +6,7 @@
 [0m[[0m[33mwarn[0m] [0m[0m[33m   |[0mIt would fail on pattern case: actors.TeamInfo(_, _), actors.StatusResponse(_, _), actors.MoodResponse(_, _), actors.PingResponse(_, _), actors.SuccessResponseTest(_), actors.PingersResponse(_)[0m
 [0m[[0m[33mwarn[0m] [0m[0m[33m   |[0m[0m
 [0m[[0m[33mwarn[0m] [0m[0m[33m   |[0m longer explanation available when compiling with `-explain`[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m[33m-- [E029] Pattern Match Exhaustivity Warning: C:\Users\rosny\Downloads\ProjetINFOM453\src\main\scala\PopServer.scala:102:6 [0m[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m[33m-- [E029] Pattern Match Exhaustivity Warning: D:\Document_D\Master_2\Projet_info_ambiante_mobile\code_projet\ProjetINFOM453\src\main\scala\PopServer.scala:102:6 [0m[0m[0m
 [0m[[0m[33mwarn[0m] [0m[0m[33m102 |[0m      [33mcase[0m SuccessResponse(message) => Ok(Map([31m"message"[0m -> message))[0m
 [0m[[0m[33mwarn[0m] [0m[0m[33m[33m    |[0m      ^[0m[0m
 [0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[33mmatch[0m may not be exhaustive.[0m
@@ -14,77 +14,69 @@
 [0m[[0m[33mwarn[0m] [0m[0m[33m    |[0mIt would fail on pattern case: actors.TeamInfo(_, _), actors.StatusResponse(_, _), actors.MoodResponse(_, _), actors.PingResponse(_, _), actors.PingersResponse(_)[0m
 [0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[0m
 [0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m longer explanation available when compiling with `-explain`[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m[33m-- [E029] Pattern Match Exhaustivity Warning: C:\Users\rosny\Downloads\ProjetINFOM453\src\main\scala\PopServer.scala:117:4 [0m[0m[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m117 |[0m    [33mcase[0m PingersResponse(pingers) =>[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m[33m-- [E029] Pattern Match Exhaustivity Warning: D:\Document_D\Master_2\Projet_info_ambiante_mobile\code_projet\ProjetINFOM453\src\main\scala\PopServer.scala:121:4 [0m[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m121 |[0m    [33mcase[0m PingersResponse(pingers) =>[0m
 [0m[[0m[33mwarn[0m] [0m[0m[33m[33m    |[0m    ^[0m[0m
 [0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[33mmatch[0m may not be exhaustive.[0m
 [0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[0m
 [0m[[0m[33mwarn[0m] [0m[0m[33m    |[0mIt would fail on pattern case: actors.SuccessResponse(_), actors.TeamInfo(_, _), actors.StatusResponse(_, _), actors.MoodResponse(_, _), actors.PingResponse(_, _), actors.SuccessResponseTest(_)[0m
 [0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[0m
 [0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m longer explanation available when compiling with `-explain`[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m[33m-- [E029] Pattern Match Exhaustivity Warning: C:\Users\rosny\Downloads\ProjetINFOM453\src\main\scala\PopServer.scala:131:6 [0m[0m[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m131 |[0m      [33mcase[0m TeamInfo(id, members) => Ok(Map([31m"id"[0m -> id, [31m"members"[0m -> members.keys.toList))[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m[33m    |[0m      ^[0m[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[33mmatch[0m may not be exhaustive.[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0mIt would fail on pattern case: actors.SuccessResponse(_), actors.StatusResponse(_, _), actors.MoodResponse(_, _), actors.PingResponse(_, _), actors.SuccessResponseTest(_), actors.PingersResponse(_)[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m longer explanation available when compiling with `-explain`[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m[33m-- [E029] Pattern Match Exhaustivity Warning: C:\Users\rosny\Downloads\ProjetINFOM453\src\main\scala\PopServer.scala:145:6 [0m[0m[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m145 |[0m      [33mcase[0m SuccessResponse(message) => Ok(Map([31m"message"[0m -> message))[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m[33m    |[0m      ^[0m[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[33mmatch[0m may not be exhaustive.[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0mIt would fail on pattern case: actors.TeamInfo(_, _), actors.StatusResponse(_, _), actors.MoodResponse(_, _), actors.PingResponse(_, _), actors.SuccessResponseTest(_), actors.PingersResponse(_)[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m longer explanation available when compiling with `-explain`[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m[33m-- [E029] Pattern Match Exhaustivity Warning: C:\Users\rosny\Downloads\ProjetINFOM453\src\main\scala\PopServer.scala:161:6 [0m[0m[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m161 |[0m      [33mcase[0m SuccessResponse(message) => Ok(Map([31m"message"[0m -> message))[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m[33m    |[0m      ^[0m[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[33mmatch[0m may not be exhaustive.[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0mIt would fail on pattern case: actors.TeamInfo(_, _), actors.StatusResponse(_, _), actors.MoodResponse(_, _), actors.PingResponse(_, _), actors.SuccessResponseTest(_), actors.PingersResponse(_)[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m longer explanation available when compiling with `-explain`[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m[33m-- [E029] Pattern Match Exhaustivity Warning: C:\Users\rosny\Downloads\ProjetINFOM453\src\main\scala\PopServer.scala:175:6 [0m[0m[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m175 |[0m      [33mcase[0m StatusResponse(name, status) => Ok(Map([31m"name"[0m -> name, [31m"statut"[0m -> status.getOrElse([31m"N/A"[0m)))[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m[33m    |[0m      ^[0m[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[33mmatch[0m may not be exhaustive.[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0mIt would fail on pattern case: actors.SuccessResponse(_), actors.TeamInfo(_, _), actors.MoodResponse(_, _), actors.PingResponse(_, _), actors.SuccessResponseTest(_), actors.PingersResponse(_)[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m longer explanation available when compiling with `-explain`[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m[33m-- [E029] Pattern Match Exhaustivity Warning: C:\Users\rosny\Downloads\ProjetINFOM453\src\main\scala\PopServer.scala:190:6 [0m[0m[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m190 |[0m      [33mcase[0m SuccessResponse(message) => Ok(Map([31m"message"[0m -> message))[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m[33m    |[0m      ^[0m[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[33mmatch[0m may not be exhaustive.[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0mIt would fail on pattern case: actors.TeamInfo(_, _), actors.StatusResponse(_, _), actors.MoodResponse(_, _), actors.PingResponse(_, _), actors.SuccessResponseTest(_), actors.PingersResponse(_)[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m longer explanation available when compiling with `-explain`[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m[33m-- [E029] Pattern Match Exhaustivity Warning: C:\Users\rosny\Downloads\ProjetINFOM453\src\main\scala\PopServer.scala:205:6 [0m[0m[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m205 |[0m      [33mcase[0m MoodResponse(name, mood) => Ok(Map([31m"name"[0m -> name, [31m"mood"[0m -> mood.getOrElse([31m"N/A"[0m)))[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m[33m    |[0m      ^[0m[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[33mmatch[0m may not be exhaustive.[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0mIt would fail on pattern case: actors.SuccessResponse(_), actors.TeamInfo(_, _), actors.StatusResponse(_, _), actors.PingResponse(_, _), actors.SuccessResponseTest(_), actors.PingersResponse(_)[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m longer explanation available when compiling with `-explain`[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m[33m-- [E029] Pattern Match Exhaustivity Warning: C:\Users\rosny\Downloads\ProjetINFOM453\src\main\scala\PopServer.scala:220:6 [0m[0m[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m220 |[0m      [33mcase[0m PingResponse(sender, rec) => Ok(Map([31m"message"[0m -> [31ms"Ping  de [0m$sender[31m to [0m$rec[31m"[0m))[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m[33m-- [E029] Pattern Match Exhaustivity Warning: D:\Document_D\Master_2\Projet_info_ambiante_mobile\code_projet\ProjetINFOM453\src\main\scala\PopServer.scala:141:6 [0m[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m141 |[0m      [33mcase[0m PingResponse(sender, rec) => Ok(Map([31m"message"[0m -> [31ms"Ping  de [0m$sender[31m to [0m$rec[31m"[0m))[0m
 [0m[[0m[33mwarn[0m] [0m[0m[33m[33m    |[0m      ^[0m[0m
 [0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[33mmatch[0m may not be exhaustive.[0m
 [0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[0m
 [0m[[0m[33mwarn[0m] [0m[0m[33m    |[0mIt would fail on pattern case: actors.SuccessResponse(_), actors.TeamInfo(_, _), actors.StatusResponse(_, _), actors.MoodResponse(_, _), actors.SuccessResponseTest(_), actors.PingersResponse(_)[0m
 [0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[0m
 [0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m longer explanation available when compiling with `-explain`[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m[33m-- [E029] Pattern Match Exhaustivity Warning: C:\Users\rosny\Downloads\ProjetINFOM453\src\main\scala\PopServer.scala:234:6 [0m[0m[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m234 |[0m      [33mcase[0m PingersResponse(pingers) => Ok(Map([31m"pingers"[0m -> pingers))[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m[33m-- [E029] Pattern Match Exhaustivity Warning: D:\Document_D\Master_2\Projet_info_ambiante_mobile\code_projet\ProjetINFOM453\src\main\scala\PopServer.scala:155:6 [0m[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m155 |[0m      [33mcase[0m TeamInfo(id, members) => Ok(Map([31m"id"[0m -> id, [31m"members"[0m -> members.keys.toList))[0m
 [0m[[0m[33mwarn[0m] [0m[0m[33m[33m    |[0m      ^[0m[0m
 [0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[33mmatch[0m may not be exhaustive.[0m
 [0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[0m
-[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0mIt would fail on pattern case: actors.SuccessResponse(_), actors.TeamInfo(_, _), actors.StatusResponse(_, _), actors.MoodResponse(_, _), actors.PingResponse(_, _), actors.SuccessResponseTest(_)[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0mIt would fail on pattern case: actors.SuccessResponse(_), actors.StatusResponse(_, _), actors.MoodResponse(_, _), actors.PingResponse(_, _), actors.SuccessResponseTest(_), actors.PingersResponse(_)[0m
 [0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[0m
 [0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m longer explanation available when compiling with `-explain`[0m
-[0m[[0m[33mwarn[0m] [0m[0mthere were 7 deprecation warnings; re-run with -deprecation for details[0m
-[0m[[0m[33mwarn[0m] [0m[0m12 warnings found[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m[33m-- [E029] Pattern Match Exhaustivity Warning: D:\Document_D\Master_2\Projet_info_ambiante_mobile\code_projet\ProjetINFOM453\src\main\scala\PopServer.scala:169:6 [0m[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m169 |[0m      [33mcase[0m SuccessResponse(message) => Ok(Map([31m"message"[0m -> message))[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m[33m    |[0m      ^[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[33mmatch[0m may not be exhaustive.[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0mIt would fail on pattern case: actors.TeamInfo(_, _), actors.StatusResponse(_, _), actors.MoodResponse(_, _), actors.PingResponse(_, _), actors.SuccessResponseTest(_), actors.PingersResponse(_)[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m longer explanation available when compiling with `-explain`[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m[33m-- [E029] Pattern Match Exhaustivity Warning: D:\Document_D\Master_2\Projet_info_ambiante_mobile\code_projet\ProjetINFOM453\src\main\scala\PopServer.scala:187:6 [0m[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m187 |[0m      [33mcase[0m StatusResponse(name, status) => Ok(Map([31m"name"[0m -> name, [31m"statut"[0m -> status.getOrElse([31m"N/A"[0m)))[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m[33m    |[0m      ^[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[33mmatch[0m may not be exhaustive.[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0mIt would fail on pattern case: actors.SuccessResponse(_), actors.TeamInfo(_, _), actors.MoodResponse(_, _), actors.PingResponse(_, _), actors.SuccessResponseTest(_), actors.PingersResponse(_)[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m longer explanation available when compiling with `-explain`[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m[33m-- [E029] Pattern Match Exhaustivity Warning: D:\Document_D\Master_2\Projet_info_ambiante_mobile\code_projet\ProjetINFOM453\src\main\scala\PopServer.scala:204:6 [0m[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m204 |[0m      [33mcase[0m SuccessResponse(message) => Ok(Map([31m"message"[0m -> message))[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m[33m    |[0m      ^[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[33mmatch[0m may not be exhaustive.[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0mIt would fail on pattern case: actors.TeamInfo(_, _), actors.StatusResponse(_, _), actors.MoodResponse(_, _), actors.PingResponse(_, _), actors.SuccessResponseTest(_), actors.PingersResponse(_)[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m longer explanation available when compiling with `-explain`[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m[33m-- [E029] Pattern Match Exhaustivity Warning: D:\Document_D\Master_2\Projet_info_ambiante_mobile\code_projet\ProjetINFOM453\src\main\scala\PopServer.scala:221:6 [0m[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m221 |[0m      [33mcase[0m MoodResponse(name, mood) => Ok(Map([31m"name"[0m -> name, [31m"mood"[0m -> mood.getOrElse([31m"N/A"[0m)))[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m[33m    |[0m      ^[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[33mmatch[0m may not be exhaustive.[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0mIt would fail on pattern case: actors.SuccessResponse(_), actors.TeamInfo(_, _), actors.StatusResponse(_, _), actors.PingResponse(_, _), actors.SuccessResponseTest(_), actors.PingersResponse(_)[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m longer explanation available when compiling with `-explain`[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m[33m-- [E029] Pattern Match Exhaustivity Warning: D:\Document_D\Master_2\Projet_info_ambiante_mobile\code_projet\ProjetINFOM453\src\main\scala\PopServer.scala:238:6 [0m[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m238 |[0m      [33mcase[0m SuccessResponse(message) => Ok(Map([31m"message"[0m -> message))[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m[33m    |[0m      ^[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[33mmatch[0m may not be exhaustive.[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0mIt would fail on pattern case: actors.TeamInfo(_, _), actors.StatusResponse(_, _), actors.MoodResponse(_, _), actors.PingResponse(_, _), actors.SuccessResponseTest(_), actors.PingersResponse(_)[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m[0m
+[0m[[0m[33mwarn[0m] [0m[0m[33m    |[0m longer explanation available when compiling with `-explain`[0m
+[0m[[0m[33mwarn[0m] [0m[0mthere were 12 deprecation warnings; re-run with -deprecation for details[0m
+[0m[[0m[33mwarn[0m] [0m[0m11 warnings found[0m

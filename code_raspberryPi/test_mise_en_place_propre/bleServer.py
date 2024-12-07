@@ -91,6 +91,7 @@ def write_request(characteristic: BlessGATTCharacteristic, value: Any, **kwargs)
             ids_structure["id_team"] = characteristic.value.decode("utf-8")
     
     print(wifi_structure)
+    # try to connect the raspberry pi to the wifi witht he given data
     # response = try_to_connect_wifi()
     # print("response = %s" %response)
 
