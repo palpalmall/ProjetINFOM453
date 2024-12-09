@@ -20,7 +20,7 @@ object TeamManagerActor {
         createResult match {
           case Right(successMessage) =>
             members.foreach(member => teams(id)._1 ! AddMember(member, replyTo))
-            replyTo ! SuccessResponseTest(Map("OK" -> "GUUD"))
+            replyTo ! SuccessResponseTest(Map("messagesucces" -> successMessage))
           case Left(errorMessage) =>
             replyTo ! FailureResponse(errorMessage)
         }
@@ -100,6 +100,18 @@ object TeamManagerActor {
             replyTo ! FailureResponse(s"l'equipe $teamId a pas de membre")
           case None =>
             replyTo ! FailureResponse(s"l'equipe $teamId not found")
+        }
+        Behaviors.same
+      case GetPingersTeamMember(teamId, member, replyTo) =>
+        teams.get(teamId) match {
+          case Some((teamActor, Some(members))) if members.contains(member) =>
+            teamActor ! GetPingersMember(member, replyTo)
+          case Some((_, Some(_))) =>
+            replyTo ! FailureResponse(s"Le membre $member n'existe pas dans l'équipe $teamId")
+          case Some((_, None)) =>
+            replyTo ! FailureResponse(s"L'équipe $teamId n'a pas de membres")
+          case None =>
+            replyTo ! FailureResponse(s"L'équipe $teamId n'existe pas")
         }
         Behaviors.same
 

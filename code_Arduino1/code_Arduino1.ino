@@ -9,70 +9,15 @@
  
 // Include the Wire library for I2C
 #include <Wire.h>
-#include <Servo.h>
-#include <LiquidCrystal.h>
 
 // LED on pin 13
-const int buttonPin = A1;
-const int ledPin = 6; // onboard pin
+const int buttonPin = A1; // optionnal
+const int ledPin = 1; // ping pin
 const int REDPin = 4; //PWM PIN
 const int GREENPin = 3; //PWM PIN
 const int BLUEPin = 2; //PWM PIN
-bool teteFrappe = false;
-//const int analogPin = 0;
+bool smashedHead = false;
 
-// initialize the library with the numbers of the MKR Pin: ( From D0 to D5 )
-LiquidCrystal lcd(5, 6, 7, 8, 9, 10);
-
-byte heart[8] = {
-  0b00000,
-  0b01010,
-  0b11111,
-  0b11111,
-  0b11111,
-  0b01110,
-  0b00100,
-  0b00000
-};
-
-byte smiley[8] = {
-  0b00000,
-  0b00000,
-  0b01010,
-  0b00000,
-  0b00000,
-  0b10001,
-  0b01110,
-  0b00000
-};
-
-byte armsDown[8] = {
-  0b00100,
-  0b01010,
-  0b00100,
-  0b00100,
-  0b01110,
-  0b10101,
-  0b00100,
-  0b01010
-};
-
-byte armsUp[8] = {
-  0b00100,
-  0b01010,
-  0b00100,
-  0b10101,
-  0b01110,
-  0b00100,
-  0b00100,
-  0b01010
-};
-
-String text = "coucou les amis";
-
-Servo myservo;
-const int servoPin = 5; // PWM PIN
-int pos = 0;
  
 void setup() {
   Serial.begin(4800); //to print analog data
@@ -89,7 +34,7 @@ void setup() {
   // For the button, to click on figurine's head
   pinMode(buttonPin, INPUT_PULLUP);  
   
-  // Setup pin 13 and RGB pins as output and turn LEDs off
+  // Setup pin 1 and RGB pins as output and turn LEDs off
   pinMode(ledPin, OUTPUT);
   pinMode(REDPin, OUTPUT);
   pinMode(GREENPin, OUTPUT);
@@ -97,38 +42,6 @@ void setup() {
   // on eteind les pins RGB
   shutDownRGBLED();
   digitalWrite(ledPin, LOW); //on eteind la onboard led
-
-  myservo.attach(servoPin);
-  myservo.write(0);
-
-  // initialize LCD and set up the number of columns and rows:
-  lcd.begin(16, 2);
-  lcd.clear();
-  // // create a new character
-  // lcd.createChar(0, heart);
-  // // create a new character
-  // lcd.createChar(1, smiley);
-  // // create a new character
-  // lcd.createChar(3, armsDown);
-  // // create a new character
-  // lcd.createChar(4, armsUp);
-  // // set the cursor to the top left
-  // lcd.setCursor(0, 0);
-  // delay(1250);
-  // //clearing for next loop
-  // lcd.clear();
-
-  //resetting cursor
-  lcd.home();
-  
-  //printing text
-  for (int ch = 0; ch <= text.length(); ch++){
-    lcd.print(text[ch]);
-    delay(250);
-  }
-  lcd.autoscroll();
-  lcd.setCursor(0,0);
-  lcd.noAutoscroll(); //stoppping autoscroll when full text is printed
 }
  
 // Function that executes whenever data is received from master
@@ -147,26 +60,26 @@ void receiveEvent(int howMany) {
         print("data = ", data);
         if(data == 0){ // status = absent donc lumiere rouge
           analogWrite(REDPin, 255);
-          digitalWrite(GREENPin, LOW);
-          digitalWrite(BLUEPin, LOW);
-        }else{ // status = present donc lumiere verte
+          analogWrite(GREENPin, LOW);
+          analogWrite(BLUEPin, LOW);
+        }
+        else if(data == 1){
+          analogWrite(REDPin, 255);
           analogWrite(GREENPin, 255);
-          digitalWrite(REDPin, LOW);
-          digitalWrite(BLUEPin, LOW);
+          analogWrite(BLUEPin, LOW);
+        }
+        else if{ // status = present donc lumiere verte
+          analogWrite(GREENPin, 255);
+          analogWrite(REDPin, LOW);
+          analogWrite(BLUEPin, LOW);
         }
         break;}
 
-      case 1 :{ // onboard LED action (WRITE)
+      case 1 :{ // ping LED (WRITE)
         int data = Wire.read(); // n'en a que si on recoit un write et pas un read
         print("data = ", data);
-        digitalWrite(ledPin, data);
+        pingLED();
         break;}
-
-      case 4 :{
-        int data = Wire.read();
-        testServo();
-        break;}
-
     }
   }
 }
@@ -177,13 +90,13 @@ void requestEvent(){ // launched when master makes a read (request)
   print("request = ", request);
 
   switch(request){
-    case 2:{
-      Wire.write(teteFrappe);
-      teteFrappe = false;
+    case 2:{ // ask for a smashed head
+      Wire.write(smashedHead);
+      smashedHead = false;
       break;
     }
 
-    case 3:{
+    case 3:{ // test, no use in project
       Wire.write("hello");
       break;
     }
@@ -201,28 +114,27 @@ void print(String text,int data){
   Serial.print("\n");
 }
 
-void testServo(){
-  for (pos = 0; pos <= 180; pos += 1) { // goes from 0 degrees to 180 degrees
-    // in steps of 1 degree
-    myservo.write(pos);              // tell servo to go to position in variable 'pos'
-    delay(5);                       // waits 15ms for the servo to reach the position
-  }
-  for (pos = 180; pos >= 0; pos -= 1) { // goes from 180 degrees to 0 degrees
-    myservo.write(pos);              // tell servo to go to position in variable 'pos'
-    delay(5);                       // waits 15ms for the servo to reach the position
+void blinkLED(){
+  digitalWrite(ledPin, HIGH);
+  delay(500);
+  digitalWrite(ledPin, LOW);
+  delay(500);
+}
+
+void pingLED(){
+  for (int i = 0; i < 3; i++){
+    blinkLED();
   }
 }
 
 void buttonPressed(){
   if (digitalRead(buttonPin) == LOW)
   {
-    teteFrappe = true;
+    smashedHead = true;
   }
 }
 
 void loop() {
   delay(100);
   buttonPressed();
-  //Serial.print(analogRead(analogPin));
-  //Serial.print("\n");
 }

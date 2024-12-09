@@ -8,4 +8,8 @@
 
 /.bloop
 
-/project
+/target
+
+/project/.bloop
+/project/project
+/project/target

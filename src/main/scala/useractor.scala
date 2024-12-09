@@ -8,6 +8,7 @@ object UserActor {
   def apply(name: String): Behavior[UserCommand] = Behaviors.setup { context =>
     var status: Option[String] = None
     var mood: Option[String] = None
+    var pingers : List[String] = List.empty
 
     Behaviors.receiveMessage {
       case UpdateStatus(newStatus, replyTo) =>
@@ -57,6 +58,11 @@ object UserActor {
         Behaviors.same
       case Ping(by, replyTo) =>
         replyTo ! PingResponse(by, name)
+        pingers :+ by
+        Behaviors.same
+      case GetPingers(replyTo) =>
+        replyTo ! PingersResponse(pingers)
+        pingers = List.empty
         Behaviors.same
     }
   }

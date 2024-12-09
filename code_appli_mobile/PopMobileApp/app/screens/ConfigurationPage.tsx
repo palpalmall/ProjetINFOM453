@@ -10,7 +10,7 @@ global.Buffer = require('buffer').Buffer;
 
 function Configuration({navigation, route}: {navigation: any, route : any}){
 
-  const {userName} = route.params // get params from connection page navigate
+  const {userName, figurine_id, team_id} = route.params // get params from connection page navigate
   const [nearbyPeripherals, setNearbyPeripherals] = useState<Map<string, Peripheral>>(new Map<string, Peripheral>())
   const [writtenDeviceId, setWrittenDeviceId] = useState("")
   const [configStep, setConfigStep] = useState("Step 1. Enable GPS")
@@ -402,12 +402,19 @@ function Configuration({navigation, route}: {navigation: any, route : any}){
       }})
     };
 
-  const sendDataToRpi = async (wifiName : string, wifiPassword : string) => {
+  const sendDataToRpi = async (wifiName : string, wifiPassword : string, figurine_id : string, team_id : string) => {
     const service_send_wifi_data = "A07498CA-AD5B-474E-940D-16F1FBE7E8CD"
+    
     const wifi_name_char = "51FF12BB-3ED8-46E5-B4F9-D64E2FEC021B"
     const wifi_password_char = "51FF12BB-3ED8-46E5-B4F9-D64E2FEC021C"
+    const figurine_id_char = "51FF12BB-3ED8-46E5-B4F9-D64E2FEC021D"
+    const team_id_char = "51FF12BB-3ED8-46E5-B4F9-D64E2FEC021E"
+
     await BleManager.writeWithoutResponse(connectedDeviceId.current, service_send_wifi_data, wifi_name_char, [...Buffer.from(wifiName, "utf-8")])//"FFF0", "FFF3", [...Buffer.from(wifiName, "utf-8")])
     await BleManager.writeWithoutResponse(connectedDeviceId.current, service_send_wifi_data, wifi_password_char, [...Buffer.from(wifiPassword, "utf-8")])
+
+    await BleManager.writeWithoutResponse(connectedDeviceId.current, service_send_wifi_data, figurine_id_char, [...Buffer.from(figurine_id, "utf-8")])
+    await BleManager.writeWithoutResponse(connectedDeviceId.current, service_send_wifi_data, team_id_char, [...Buffer.from(team_id, "utf-8")])
 
     await storeData("configDone", true) // a mettre ailleur ensuite
     setConfigStep("Step 7. Finished")
@@ -459,7 +466,7 @@ function Configuration({navigation, route}: {navigation: any, route : any}){
 
         {configStep[5] === "6" && <TextInput placeholder="Wifi's name (SSID)" onChangeText={(newText) => wifiNameRef.current = newText} style={styles.nameInput}></TextInput>}
         {configStep[5] === "6" && <TextInput placeholder="Wifi's password" onChangeText={(newText) => wifiPasswordRef.current = newText} style={styles.nameInput}></TextInput>}
-        {configStep[5] === "6" && <TouchableOpacity style={styles.connectionButton} onPress={() => sendDataToRpi(wifiNameRef.current, wifiPasswordRef.current)}>
+        {configStep[5] === "6" && <TouchableOpacity style={styles.connectionButton} onPress={() => sendDataToRpi(wifiNameRef.current, wifiPasswordRef.current, figurine_id, team_id)}>
           <Text style={styles.connectionTextButton}>Send config to the Rak</Text>
         </TouchableOpacity>}
 

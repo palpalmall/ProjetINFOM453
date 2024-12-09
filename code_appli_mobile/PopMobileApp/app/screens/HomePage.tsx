@@ -4,19 +4,22 @@ import { useEffect, useRef, useState } from "react";
 
 function Home({navigation, route}: {navigation: any, route : any}){
   
-  const {userName} = route.params // get params from connection page navigate
+  const {userName, figurine_id, team_id} = route.params // get params from connection page navigate
   const [selectedStatus, setSelectedStatus] = useState(-1)
   const [selectedSmiley, setSelectedSmiley] = useState(-1)
   const moodInputRef = useRef("")
   const smileys = ["😄","😂","🥳","😎","😮","😡","😢"]
   const status = ["green", "yellow", "red"]
 
-  const sendData = () => {
+  const sendData = async () => {
+    const url = "http://192.168.129.61:8080/"
     const dataToSend = {"status" : status[selectedStatus],
                         "smiley" : smileys[selectedSmiley],
                         "mood" : moodInputRef.current
     }
-    //fetch
+    const responseStatus = await fetch(url+"status/"+team_id+"/"+figurine_id+"/"+status[selectedStatus], {method: "POST"});
+    const responseMood = await fetch(url+"mood/"+team_id+"/"+figurine_id+"/"+moodInputRef.current,   {method: "POST"});
+    console.log(responseStatus, responseMood)
   }
 
   useEffect(() => {
@@ -29,7 +32,10 @@ function Home({navigation, route}: {navigation: any, route : any}){
     }
 
     //checkIfConfigDone()
-    //navigation.navigate('Configuration', {userName : userName})
+    // navigation.navigate('Configuration', {
+    //     userName : userName,
+    //     figurine_id : figurine_id,
+    //     team_id : team_id})
   },[])
 
   return(
