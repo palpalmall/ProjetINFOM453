@@ -58,10 +58,11 @@ object UserActor {
         Behaviors.same
       case Ping(by, replyTo) =>
         replyTo ! PingResponse(by, name)
-        pingers :+ by
+        pingers = pingers ::: List(by)
+        println(pingers)
         Behaviors.same
       case GetPingers(replyTo) =>
-        replyTo ! PingersResponse(pingers)
+        replyTo ! PingersResponse(pingers.toList)
         pingers = List.empty
         Behaviors.same
     }
