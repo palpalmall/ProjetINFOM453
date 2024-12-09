@@ -22,12 +22,19 @@ print(wifi_structure)
 team_nbr = ids["id_team"]
 my_id = ids["id_figurine"]
 
-ch = RFID_init(onTag, NamesAddrDico)
-tempSensor = temperature_init()
+try :
+    ch = RFID_init(onTag, NamesAddrDico)
+except:
+    print("no RFID reader detected")
 
-# launch a thread which send temperature to the server every hour
-t = Repeat(3600, lambda: post_temperature(team_nbr, my_id, get_temperature(tempSensor)))
-t.start()
+try :
+    tempSensor = temperature_init()
+    # launch a thread which send temperature to the server every hour
+    t = Repeat(3600, lambda: post_temperature(team_nbr, my_id, get_temperature(tempSensor)))
+    t.start()
+except :
+    print("no temperature reader detected")
+
 
 #check figurines connected to he RPi
 #send figurines availables to the server
@@ -47,4 +54,4 @@ while True :
     smashed_head_dico = askForSmashedHead(NamesAddrDico)
     for id_fig in smashed_head_dico.keys():
         if(smashed_head_dico[id_fig]):
-            post_ping(team_nbr, my_id, id_fig)
+            post_ping(team_nbr, my_id, id_fig)  
