@@ -36,14 +36,10 @@ def read_request(characteristic: BlessGATTCharacteristic, **kwargs) -> bytearray
 
 def try_to_connect_wifi():
 	
-    print(wifi_structure["wifi_name"])
-    print(wifi_structure["wifi_password"])
-	
     if(wifi_structure["wifi_name"] != "" and wifi_structure["wifi_password"] != ""):
 	    return configure_wifi(wifi_structure["wifi_name"], wifi_structure["wifi_password"])
 
 def write_request(characteristic: BlessGATTCharacteristic, value: Any, **kwargs):
-    print(characteristic.uuid)
     characteristic.value = value
     if characteristic.value == b"\x0f":
         logger.debug("NICE")
@@ -90,7 +86,6 @@ def write_request(characteristic: BlessGATTCharacteristic, value: Any, **kwargs)
         else :
             ids_structure["id_team"] = characteristic.value.decode("utf-8")
     
-    print(wifi_structure)
     # try to connect the raspberry pi to the wifi witht he given data
     # response = try_to_connect_wifi()
     # print("response = %s" %response)
@@ -161,7 +156,7 @@ async def run(loop):
 
     await asyncio.sleep(5)
     await server.stop()
-    return ids_structure
+    return ids_structure, wifi_structure
 
 
 # loop = asyncio.get_event_loop()

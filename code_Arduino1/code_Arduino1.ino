@@ -9,12 +9,10 @@
  
 // Include the Wire library for I2C
 #include <Wire.h>
-#include <Servo.h>
-#include <LiquidCrystal.h>
 
 // LED on pin 13
-const int buttonPin = A1;
-const int ledPin = 1; // onboard pin
+const int buttonPin = A1; // optionnal
+const int ledPin = 1; // ping pin
 const int REDPin = 4; //PWM PIN
 const int GREENPin = 3; //PWM PIN
 const int BLUEPin = 2; //PWM PIN

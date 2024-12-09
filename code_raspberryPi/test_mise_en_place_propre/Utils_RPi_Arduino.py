@@ -27,13 +27,13 @@ def activate_ping_figurine(id_figurine):
 def activate_status_figurine(id_figurine, status):
   addr =  NamesAddrDico[id_figurine]
   match status:
-    case "occupied":
+    case "red":
       bus.write_i2c_block_data(addr,0, [0])
 			
-    case "absent":
+    case "yellow":
       bus.write_i2c_block_data(addr,0, [1])
 			
-    case "available":
+    case "green":
       bus.write_i2c_block_data(addr,0, [2])
 			
   print("status is %s" %status)

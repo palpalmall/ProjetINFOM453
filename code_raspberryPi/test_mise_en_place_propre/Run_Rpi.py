@@ -15,9 +15,10 @@ config_done = False
 
 #on démarre le serveur ble pour récupérer les infos id team et figurine id (en plus d'essayer de se co au wifi)
 loop = asyncio.get_event_loop()
-ids = loop.run_until_complete(run(loop))
+ids, wifi_structure = loop.run_until_complete(run(loop))
 print("ids structure : ")
 print(ids)
+print(wifi_structure)
 team_nbr = ids["id_team"]
 my_id = ids["id_figurine"]
 
