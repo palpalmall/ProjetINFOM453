@@ -62,9 +62,44 @@ class PopServerTyped(system: TAS[TeamManagerCommand]) extends ScalatraServlet wi
   get("/") {
     //timeout required for the use of future
     implicit val timeout: Timeout = 5.seconds
+     implicit val scheduler: akka.actor.typed.Scheduler = system.scheduler
     //Getting a val from myActor when asking with "One"
-    Map("team" -> "Mael")
-    //Sengind the val future to the client that sent the get to root
+    val TProf: Future[Response] = system.ask(ref => CreateTeam("Prof", List("Dumas", "Schumacher","Jacquet","Vanhoof","Hallaert"), ref))
+    TProf.map {
+      case SuccessResponse(message) => Ok(Map("message" -> message))
+      case FailureResponse(error)   => BadRequest(Map("error" -> error))
+    }
+    val tEleve: Future[Response] = system.ask(ref => CreateTeam("Eleve", List("Mael", "Luis","Rosny","Noe","Dzenetan"), ref))
+    tEleve.map {
+      case SuccessResponse(message) => Ok(Map("message" -> message))
+      case FailureResponse(error)   => BadRequest(Map("error" -> error))
+    }
+    val moodS: Future[Response] = system.ask(replyTo => UpdateTeamMemberStatus("Prof", "Schumacher", "red", replyTo))
+    moodS.map {
+      case SuccessResponse(message) => Ok(Map("message" -> message))
+      case FailureResponse(error)   => BadRequest(Map("error" -> error))
+    }
+    val soodD: Future[Response] = system.ask(replyTo => UpdateTeamMemberStatus("Prof", "Dumas", "green", replyTo))
+    soodD.map {
+      case SuccessResponse(message) => Ok(Map("message" -> message))
+      case FailureResponse(error)   => BadRequest(Map("error" -> error))
+    }
+    val statusS: Future[Response] = system.ask(replyTo => UpdateTeamMemberMood("Prof", "Schumacher", "Chill", replyTo))
+    statusS.map {
+      case SuccessResponse(message) => Ok(Map("message" -> message))
+      case FailureResponse(error)   => BadRequest(Map("error" -> error))
+    } 
+    val statusD: Future[Response] = system.ask(replyTo => UpdateTeamMemberMood("Prof", "Dumas", "Jovial", replyTo))
+    statusD.map {
+      case SuccessResponse(message) => Ok(Map("message" -> message))
+      case FailureResponse(error)   => BadRequest(Map("error" -> error))
+    } 
+    val pingSD: Future[Response] = system.ask(replyTo => PingTeamMember("Prof", "Schumacher", "Dumas", replyTo))
+    pingSD.map {
+      case PingResponse(sender, rec) => Ok(Map("message" -> s"Ping  de $sender to $rec"))
+      case FailureResponse(error)         => BadRequest(Map("error" -> error))
+    }
+    
   }
 
   get("/createTeam/:id") {
@@ -101,7 +136,6 @@ class PopServerTyped(system: TAS[TeamManagerCommand]) extends ScalatraServlet wi
     result.map {
       case SuccessResponse(message) => Ok(Map("message" -> message))
       case FailureResponse(error)   => BadRequest(Map("error" -> error))
-      case SuccessResponseTest(map) => Ok(Map("caca"->"pipi"))
     }
       
   }
@@ -119,7 +153,7 @@ class PopServerTyped(system: TAS[TeamManagerCommand]) extends ScalatraServlet wi
 
   result.map {
     case PingersResponse(pingers) =>
-      Ok(Map("pingers" -> pingers))
+      Ok(pingers)
     case FailureResponse(error) =>
       BadRequest(Map("error" -> error))
     }
