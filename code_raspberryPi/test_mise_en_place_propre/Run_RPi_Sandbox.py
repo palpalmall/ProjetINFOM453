@@ -41,6 +41,6 @@ import json, time, threading
 from Utils_RPi_Arduino import askForSmashedHead, onTag, RFID_init, Repeat, get_temperature, temperature_init
 from smbus import SMBus
 bus = SMBus(1)
-mood = "test lcd"
+mood = "dayum test OK OK"
 message = [ord(character) for character in mood] # tranform mood message into a ascii code list
 bus.write_i2c_block_data(0x8, 4, message)

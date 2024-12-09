@@ -17,9 +17,8 @@ def get_init(login, psw):
 def get_ping(team_id, member_id, url = url) :
     response = requests.get(url+"/ping/"+str(team_id)+"/"+str(member_id))
     response = json.loads(response.text)
-    print(response)
-    for id_figurine in response:
-        pass#activate_ping_figurine(id_figurine)
+    for id in response.keys():
+        pass#activate_ping_figurine(response[id])
 
 def get_status(team_id, member_id, url = url) :
     response = requests.get(url+"/status/"+str(team_id)+"/"+str(member_id))
