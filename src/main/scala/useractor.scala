@@ -6,8 +6,8 @@ import akka.actor.typed.Behavior
 
 object UserActor {
   def apply(name: String): Behavior[UserCommand] = Behaviors.setup { context =>
-    var status: Option[String] = None
-    var mood: Option[String] = None
+    var status: Option[String] = Option("red")
+    var mood: Option[String] = Option("neutral")
     var pingers : List[String] = List.empty
 
     Behaviors.receiveMessage {
@@ -59,7 +59,6 @@ object UserActor {
       case Ping(by, replyTo) =>
         replyTo ! PingResponse(by, name)
         pingers = pingers ::: List(by)
-        println(pingers)
         Behaviors.same
       case GetPingers(replyTo) =>
         replyTo ! PingersResponse(pingers.toList)

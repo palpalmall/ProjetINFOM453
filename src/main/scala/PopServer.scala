@@ -74,31 +74,7 @@ class PopServerTyped(system: TAS[TeamManagerCommand]) extends ScalatraServlet wi
       case SuccessResponse(message) => Ok(Map("message" -> message))
       case FailureResponse(error)   => BadRequest(Map("error" -> error))
     }
-    val moodS: Future[Response] = system.ask(replyTo => UpdateTeamMemberStatus("Prof", "Schumacher", "red", replyTo))
-    moodS.map {
-      case SuccessResponse(message) => Ok(Map("message" -> message))
-      case FailureResponse(error)   => BadRequest(Map("error" -> error))
-    }
-    val soodD: Future[Response] = system.ask(replyTo => UpdateTeamMemberStatus("Prof", "Dumas", "green", replyTo))
-    soodD.map {
-      case SuccessResponse(message) => Ok(Map("message" -> message))
-      case FailureResponse(error)   => BadRequest(Map("error" -> error))
-    }
-    val statusS: Future[Response] = system.ask(replyTo => UpdateTeamMemberMood("Prof", "Schumacher", "Chill", replyTo))
-    statusS.map {
-      case SuccessResponse(message) => Ok(Map("message" -> message))
-      case FailureResponse(error)   => BadRequest(Map("error" -> error))
-    } 
-    val statusD: Future[Response] = system.ask(replyTo => UpdateTeamMemberMood("Prof", "Dumas", "Jovial", replyTo))
-    statusD.map {
-      case SuccessResponse(message) => Ok(Map("message" -> message))
-      case FailureResponse(error)   => BadRequest(Map("error" -> error))
-    } 
-    val pingSD: Future[Response] = system.ask(replyTo => PingTeamMember("Prof", "Schumacher", "Dumas", replyTo))
-    pingSD.map {
-      case PingResponse(sender, rec) => Ok(Map("message" -> s"Ping  de $sender to $rec"))
-      case FailureResponse(error)         => BadRequest(Map("error" -> error))
-    }
+
     
   }
 
@@ -237,6 +213,7 @@ class PopServerTyped(system: TAS[TeamManagerCommand]) extends ScalatraServlet wi
     result.map {
       case SuccessResponse(message) => Ok(Map("message" -> message))
       case FailureResponse(error)   => BadRequest(Map("error" -> error))
+      case StatusResponse(name, status) => Map(name -> status)
     }
   }
 
@@ -271,6 +248,7 @@ class PopServerTyped(system: TAS[TeamManagerCommand]) extends ScalatraServlet wi
     result.map {
       case SuccessResponse(message) => Ok(Map("message" -> message))
       case FailureResponse(error)   => BadRequest(Map("error" -> error))
+      case MoodResponse(name, Some(newMood)) => Map(name -> newMood)
     } 
   }
 
