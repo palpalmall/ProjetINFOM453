@@ -38,11 +38,9 @@
 
 # ================================ TEST RFID ==================================
 import json, time, threading
-from Utils_web_requests import *
 from Utils_RPi_Arduino import askForSmashedHead, onTag, RFID_init, Repeat, get_temperature, temperature_init
-
-tempSensor = temperature_init()
-# should be restarted after 24h (TODO)
-
-t = Repeat(1.0, lambda: get_temperature(tempSensor))
-t.start()
+from smbus import SMBus
+bus = SMBus(1)
+mood = "test lcd"
+message = [ord(character) for character in mood] # tranform mood message into a ascii code list
+bus.write_i2c_block_data(0x8, 4, message)

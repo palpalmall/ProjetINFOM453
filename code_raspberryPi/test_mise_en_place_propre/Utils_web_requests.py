@@ -18,21 +18,20 @@ def get_ping(team_id, member_id, url = url) :
     response = requests.get(url+"/ping/"+str(team_id)+"/"+str(member_id))
     response = json.loads(response.text)
     print(response)
-    for id_figurine in response.keys():
-        if(response[id_figurine]):
-            pass#activate_ping_figurine(id_figurine)
+    for id_figurine in response:
+        pass#activate_ping_figurine(id_figurine)
 
 def get_status(team_id, member_id, url = url) :
     response = requests.get(url+"/status/"+str(team_id)+"/"+str(member_id))
     response = json.loads(response.text)
-    for id_figurine in response.keys():
-        pass#activate_status_figurine(id_figurine, response[id_figurine])
+    fig_status = response["statut"]
+    pass#activate_status_figurine(member_id, fig_status)
 
 def get_mood(team_id, member_id, url = url) :
     response = requests.get(url+"/mood/"+str(team_id)+"/"+str(member_id))
     response = json.loads(response.text)
-    for id_figurine in response.keys():
-        pass#activate_mood_figurine(id_figurine, response[id_figurine])
+    fig_mood = response["mood"]
+    pass#activate_mood_figurine(member_id, fig_mood)
 
 #------------- POST methods --------------
 

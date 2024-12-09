@@ -80,7 +80,7 @@ while numb == 1:
 		bus.write_i2c_block_data(addr1,1, [0]) # switch it off
 		bus.write_i2c_block_data(addr2,1, [0]) # switch it off
 	elif ledstate == "2":
-		data = bus.read_i2c_block_data(0x8, 3, 5)
+		data = bus.read_i2c_block_data(0x3C, 3, 5)
 		print("receiuved data", data)
 	elif ledstate == "3":
 		sendStatusToSlaves(NamesAddrDico, exempleStatusReceived)
