@@ -13,46 +13,49 @@
 
 // LED on pin 13
 const int buttonPin = A1;
+const int ledPin = 0; // ping pin
 const int REDPin = 3; //PWM PIN
 const int GREENPin = 2; //PWM PIN
 const int BLUEPin = 1; //PWM PIN
 bool smashedHead = false;
+
 // initialize the library with the numbers of the MKR Pin: ( From D0 to D5 )
-LiquidCrystal lcd(4, 5, 6, 7, 8, 9);
+const int rs = 10, en = 9, d4 = 8, d5 = 7, d6 = 6, d7 = 5;
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
 // optionnal
-byte heart[8] = {
-  0b00000,
-  0b01010,
-  0b11111,
-  0b11111,
-  0b11111,
-  0b01110,
-  0b00100,
-  0b00000
-};
+// byte heart[8] = {
+//   0b00000,
+//   0b01010,
+//   0b11111,
+//   0b11111,
+//   0b11111,
+//   0b01110,
+//   0b00100,
+//   0b00000
+// };
 
-byte smiley[8] = {
-  0b00000,
-  0b00000,
-  0b01010,
-  0b00000,
-  0b00000,
-  0b10001,
-  0b01110,
-  0b00000
-};
+// byte smiley[8] = {
+//   0b00000,
+//   0b00000,
+//   0b01010,
+//   0b00000,
+//   0b00000,
+//   0b10001,
+//   0b01110,
+//   0b00000
+// };
 
-byte frownie[8] = {
-  0b00000,
-  0b00000,
-  0b01010,
-  0b00000,
-  0b00000,
-  0b00000,
-  0b01110,
-  0b10001
-};
+// byte frownie[8] = {
+//   0b00000,
+//   0b00000,
+//   0b01010,
+//   0b00000,
+//   0b00000,
+//   0b00000,
+//   0b01110,
+//   0b10001
+// };
  
 void setup() {
   Serial.begin(9600); //to print analog data
@@ -76,6 +79,11 @@ void setup() {
   // on eteind les pins RGB
   shutDownRGBLED();
 
+  // create a new character
+  // lcd.createChar(0, heart);
+  // lcd.createChar(1, smiley);
+  // lcd.createChar(2, frownie);
+
   // initialize LCD and set up the number of columns and rows:
   lcd.begin(16, 2);
   lcd.setCursor(0, 0);
@@ -94,21 +102,22 @@ void receiveEvent(int howMany) {
 
       case 0 :{ // status LED action (WRITE)
         int data = Wire.read(); // n'en a que si on recoit un write et pas un read
+        shutDownRGBLED();
         print("data = ", data);
         if(data == 0){ // status = absent donc lumiere rouge
-          analogWrite(REDPin, 255);
-          analogWrite(GREENPin, LOW);
-          analogWrite(BLUEPin, LOW);
+          digitalWrite(REDPin, HIGH);
+          digitalWrite(GREENPin, LOW);
+          digitalWrite(BLUEPin, LOW);
         }
         else if(data == 1){
-          analogWrite(REDPin, 255);
-          analogWrite(GREENPin, 255);
-          analogWrite(BLUEPin, LOW);
+          digitalWrite(REDPin, HIGH);
+          digitalWrite(GREENPin, HIGH);
+          digitalWrite(BLUEPin, LOW);
         }
-        else if{ // status = present donc lumiere verte
-          analogWrite(GREENPin, 255);
-          analogWrite(REDPin, LOW);
-          analogWrite(BLUEPin, LOW);
+        else if(data == 2){ // status = present donc lumiere verte
+          digitalWrite(GREENPin, 255);
+          digitalWrite(REDPin, LOW);
+          digitalWrite(BLUEPin, LOW);
         }
         break;}
 
@@ -119,12 +128,25 @@ void receiveEvent(int howMany) {
         break;}
 
       case 4 :{// lcd screen case
-        int data = Wire.read();
+        //String text = "coucou les amis";
+        //Serial.print(text);
+        char myString[16];
+        int id = 0;
+        while(Wire.available() > 0){
+          char data = Wire.read();
+          myString[id] = data;
+          id++; 
+        }
+        for(id; id <16; id++){
+          myString[id] = ' ';
+        }
         lcd.home();
-        // cast byte to string
-        String message = "I test lcd";
-        lcd.print(message);
-        // lcd screen
+        for (int ch = 0; ch <= sizeof(myString); ch++){
+          lcd.print(myString[ch]);
+        }
+        lcd.autoscroll();
+        lcd.setCursor(0,0);
+        lcd.noAutoscroll(); //stoppping autoscroll when full text is printed
         break;}
 
     }
@@ -138,6 +160,7 @@ void requestEvent(){ // launched when master makes a read (request)
 
   switch(request){
     case 2:{
+      Serial.print(smashedHead);
       Wire.write(smashedHead);
       smashedHead = false;
       break;
@@ -151,9 +174,9 @@ void requestEvent(){ // launched when master makes a read (request)
 }
 
 void shutDownRGBLED(){ // shut down rgb LED
-  analogWrite(REDPin, LOW);
-  analogWrite(GREENPin, LOW);
-  analogWrite(BLUEPin, LOW);
+  digitalWrite(REDPin, LOW);
+  digitalWrite(GREENPin, LOW);
+  digitalWrite(BLUEPin, LOW);
 }
 
 void print(String text,int data){

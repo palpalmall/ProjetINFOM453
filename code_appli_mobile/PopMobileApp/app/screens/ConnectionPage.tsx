@@ -11,7 +11,7 @@ function Connection({navigation}: {navigation: any}){
   const handleConnection = async () => {
     //let response = await fetch(serverURL, )
     //response = await response.json()
-    let response = (figIdInput.current === "101112" && teamIdInput.current === "32") 
+    let response = (figIdInput.current === "Dumas" && teamIdInput.current === "Prof") 
     if(response){
       navigation.navigate("Home", {
         figurine_id : figIdInput.current,
@@ -25,8 +25,8 @@ function Connection({navigation}: {navigation: any}){
     <>
       <SafeAreaView style={styles.container}>
         {serverResponse && <Text style={styles.alertMessage}>Le mot de passe ou le nom utilisateur est incorrect</Text>}
-        <TextInput keyboardType={Platform.OS === "android" ? "numeric" : "number-pad"} onChangeText={(newFigId) => {figIdInput.current = newFigId}} placeholder="Your figurine's ID" style={styles.figIdInput}></TextInput>
-        <TextInput keyboardType={Platform.OS === "android" ? "numeric" : "number-pad"} onChangeText={(newTeamId) => {teamIdInput.current = newTeamId}} placeholder="Your team's ID" style={styles.teamIdInput}></TextInput>
+        <TextInput onChangeText={(newFigId) => {figIdInput.current = newFigId}} placeholder="Your figurine's ID" style={styles.figIdInput}></TextInput>
+        <TextInput onChangeText={(newTeamId) => {teamIdInput.current = newTeamId}} placeholder="Your team's ID" style={styles.teamIdInput}></TextInput>
         <TouchableOpacity onPress={handleConnection} style={styles.connectionButton}>
           <Text style={styles.connectionTextButton}>Connection</Text>
         </TouchableOpacity>

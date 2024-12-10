@@ -1,7 +1,8 @@
     #include <LiquidCrystal.h>
 
     // initialize the library with the numbers of the MKR Pin: ( From D0 to D5 )
-    LiquidCrystal lcd(0, 1, 2, 3, 4, 5);
+const int rs = 5, en = 4, d4 = 3, d5 = 2, d6 = 1, d7 = 0;
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
    byte heart[8] = {
 

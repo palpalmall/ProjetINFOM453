@@ -68,7 +68,7 @@ void receiveEvent(int howMany) {
           analogWrite(GREENPin, 255);
           analogWrite(BLUEPin, LOW);
         }
-        else if{ // status = present donc lumiere verte
+        else if(data == 2){ // status = present donc lumiere verte
           analogWrite(GREENPin, 255);
           analogWrite(REDPin, LOW);
           analogWrite(BLUEPin, LOW);

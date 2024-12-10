@@ -446,7 +446,7 @@ function Configuration({navigation, route}: {navigation: any, route : any}){
         </TouchableOpacity>}
 
         {configStep[5] === "2" && <TouchableOpacity style={styles.connectionButton} onPress={handleAcceptPermissions}>
-          <Text style={styles.connectionTextButton}>Test everything button</Text>
+          <Text style={styles.connectionTextButton}>Accept permissions</Text>
         </TouchableOpacity>}
 
         {configStep[5] === "3" && <TouchableOpacity style={styles.connectionButton} onPress={enableBluetoothAndroid}>
