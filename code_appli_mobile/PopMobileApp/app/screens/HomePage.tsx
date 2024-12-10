@@ -32,10 +32,10 @@ function Home({navigation, route}: {navigation: any, route : any}){
     }
 
     //checkIfConfigDone()
-    // navigation.navigate('Configuration', {
-    //     userName : userName,
-    //     figurine_id : figurine_id,
-    //     team_id : team_id})
+    navigation.navigate('Configuration', {
+        userName : userName,
+        figurine_id : figurine_id,
+        team_id : team_id})
   },[])
 
   return(
