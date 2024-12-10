@@ -39,13 +39,18 @@
 # ================================ TEST RFID ==================================
 import json, time, threading
 from Utils_RPi_Arduino import askForSmashedHead, onTag, RFID_init, Repeat, get_temperature, temperature_init
-from smbus import SMBus
-bus = SMBus(1)
-mood = "dayum test"
-message = [ord(character) for character in mood] # tranform mood message into a ascii code list
-bus.write_i2c_block_data(0x8, 4, message)
+from Phidget22.Devices.RFID import *
+from Phidget22.RFIDProtocol import RFIDProtocol
+from Utils_web_requests import post_temperature
+# from smbus import SMBus
+# bus = SMBus(1)
+# mood = "dayum test"
+# message = [ord(character) for character in mood] # tranform mood message into a ascii code list
+# bus.write_i2c_block_data(0x8, 4, message)
 
-smashed = bus.read_i2c_block_data(0x8, 2, 1)
-print(smashed)
+# smashed = bus.read_i2c_block_data(0x8, 2, 1)
+# print(smashed)
 
-bus.write_i2c_block_data(0x8,0, [0])
+# bus.write_i2c_block_data(0x8,0, [2])
+
+post_temperature("Prof", "Dumas", 10)

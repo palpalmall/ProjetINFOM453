@@ -38,17 +38,17 @@ except :
 
 #check figurines connected to he RPi
 #send figurines availables to the server
-while len(NamesAddrDico) <= 0 and my_id == -1 and team_nbr == -1:
+while len(NamesAddrDico.keys()) <= 0 or my_id == -1 or team_nbr == -1:
     pass
 
 while True :
 
     # faire les get
-    get_ping(team_nbr, my_id) # get ping from server AND send it to the figurine
+    get_ping(team_nbr, my_id, NamesAddrDico) # get ping from server AND send it to the figurine
     
     for fig_id in NamesAddrDico.keys():
-        get_status(team_nbr, fig_id) # get status from server AND end it to the figurine
-        get_mood(team_nbr, fig_id) # get mood from server AND end it to the figurine
+        get_status(team_nbr, fig_id, NamesAddrDico) # get status from server AND end it to the figurine
+        get_mood(team_nbr, fig_id, NamesAddrDico) # get mood from server AND end it to the figurine
     
     ##check if a head has been smashed
     smashed_head_dico = askForSmashedHead(NamesAddrDico)

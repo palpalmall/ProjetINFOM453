@@ -1,8 +1,8 @@
 import json
 import requests, asyncio
-#from Utils_RPi_Arduino import activate_ping_figurine, activate_mood_figurine, activate_status_figurine
+from Utils_RPi_Arduino import activate_ping_figurine, activate_mood_figurine, activate_status_figurine
 
-url = "http://localhost:8080"
+url = "http://192.168.129.61:8080"
 
 #------------- GET methods --------------
 
@@ -14,23 +14,25 @@ def get_init(login, psw):
     team_id = response['team_id']
     return member_id, team_id
 
-def get_ping(team_id, member_id, url = url) :
+def get_ping(team_id, member_id, dico, url = url) :
     response = requests.get(url+"/ping/"+str(team_id)+"/"+str(member_id))
     response = json.loads(response.text)
-    for id in response.keys():
-        pass#activate_ping_figurine(response[id])
+    if(type(response) != list):
+        for id in response.keys():
+            activate_ping_figurine(response[id], dico)
 
-def get_status(team_id, member_id, url = url) :
+def get_status(team_id, member_id, dico, url = url) :
     response = requests.get(url+"/status/"+str(team_id)+"/"+str(member_id))
     response = json.loads(response.text)
+    print(response)
     fig_status = response["statut"]
-    pass#activate_status_figurine(member_id, fig_status)
+    activate_status_figurine(member_id, fig_status, dico)
 
-def get_mood(team_id, member_id, url = url) :
+def get_mood(team_id, member_id, dico, url = url) :
     response = requests.get(url+"/mood/"+str(team_id)+"/"+str(member_id))
     response = json.loads(response.text)
     fig_mood = response["mood"]
-    pass#activate_mood_figurine(member_id, fig_mood)
+    activate_mood_figurine(member_id, fig_mood, dico)
 
 #------------- POST methods --------------
 
@@ -51,7 +53,6 @@ def post_mood(team_id, member_id, mood, url = url) :
 
 def post_temperature(team_id, member_id, temperature, url = url):
     response = requests.post(url+'/temperature/'+str(team_id)+'/'+str(member_id)+'/'+str(temperature))
-    print(json.loads(response.text))
 
 def test_url(url, team_id = 0, member_id = 0):
     #params = json.dumps({'team_id' : team_id, 'member_id' : member_id})
@@ -60,7 +61,7 @@ def test_url(url, team_id = 0, member_id = 0):
     response = json.loads(response.text)
     print(response)
 
-post_ping(0, 0, 1)
+#post_ping(0, 0, 1)
 #post_status(0, 0, "available")
 #post_mood(0,0, "happy")
 #get_ping(0,0)
