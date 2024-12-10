@@ -1,29 +1,2 @@
 [0m[[0m[0mdebug[0m] [0m[0mCreated transactional ClassFileManager with tempDir = D:\Document_D\Master_2\Projet_info_ambiante_mobile\code_projet\ProjetINFOM453\target\scala-3.3.4\classes.bak[0m
-[0m[[0m[0mdebug[0m] [0m[0mAbout to delete class files:[0m
-[0m[[0m[0mdebug[0m] [0m[0m	UserActor$.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	UserActor.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	PopServerTyped.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	PopServer.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	UserActor$.tasty[0m
-[0m[[0m[0mdebug[0m] [0m[0m	UserActor.tasty[0m
-[0m[[0m[0mdebug[0m] [0m[0m	PopServerTyped.tasty[0m
-[0m[[0m[0mdebug[0m] [0m[0m	PopServer.tasty[0m
-[0m[[0m[0mdebug[0m] [0m[0mWe backup class files:[0m
-[0m[[0m[0mdebug[0m] [0m[0m	UserActor$.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	UserActor.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	PopServerTyped.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	PopServer.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	UserActor$.tasty[0m
-[0m[[0m[0mdebug[0m] [0m[0m	UserActor.tasty[0m
-[0m[[0m[0mdebug[0m] [0m[0m	PopServerTyped.tasty[0m
-[0m[[0m[0mdebug[0m] [0m[0m	PopServer.tasty[0m
-[0m[[0m[0mdebug[0m] [0m[0mRegistering generated classes:[0m
-[0m[[0m[0mdebug[0m] [0m[0m	UserActor.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	UserActor$.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	PopServer.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	PopServerTyped.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	UserActor.tasty[0m
-[0m[[0m[0mdebug[0m] [0m[0m	UserActor$.tasty[0m
-[0m[[0m[0mdebug[0m] [0m[0m	PopServer.tasty[0m
-[0m[[0m[0mdebug[0m] [0m[0m	PopServerTyped.tasty[0m
 [0m[[0m[0mdebug[0m] [0m[0mRemoving the temporary directory used for backing up class files: D:\Document_D\Master_2\Projet_info_ambiante_mobile\code_projet\ProjetINFOM453\target\scala-3.3.4\classes.bak[0m

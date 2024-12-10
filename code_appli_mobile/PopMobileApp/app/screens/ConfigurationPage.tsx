@@ -421,7 +421,7 @@ function Configuration({navigation, route}: {navigation: any, route : any}){
     setStepExplanations("")
     const decount = setInterval(() => {setTimeLeft((timeLeft) => timeLeft -1)}, 1000)
     const redirection = setTimeout(() => {
-      navigation.navigate("Home", {userName : userName});
+      navigation.navigate("Home", {userName : userName, figurine_id: figurine_id,team_id: team_id});
       clearInterval(decount);
       clearTimeout(redirection);
       }, 5000)

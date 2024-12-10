@@ -92,7 +92,6 @@ void setup() {
 // Function that executes whenever data is received from master
 void receiveEvent(int howMany) {
   if (Wire.available() > 0){
-    shutDownRGBLED();
 
     // on recoit dans l'ordre : [action, data=optional]
     int action = Wire.read(); // read the first byte to know the action needed to be done
@@ -102,7 +101,6 @@ void receiveEvent(int howMany) {
 
       case 0 :{ // status LED action (WRITE)
         int data = Wire.read(); // n'en a que si on recoit un write et pas un read
-        shutDownRGBLED();
         print("data = ", data);
         if(data == 0){ // status = absent donc lumiere rouge
           digitalWrite(REDPin, HIGH);

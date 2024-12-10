@@ -47,7 +47,6 @@ void setup() {
 // Function that executes whenever data is received from master
 void receiveEvent(int howMany) {
   if (Wire.available() > 0){
-    shutDownRGBLED();
 
     // on recoit dans l'ordre : [action, data=optional]
     int action = Wire.read(); // read the first byte to know the action needed to be done
@@ -59,19 +58,19 @@ void receiveEvent(int howMany) {
         int data = Wire.read(); // n'en a que si on recoit un write et pas un read
         print("data = ", data);
         if(data == 0){ // status = absent donc lumiere rouge
-          analogWrite(REDPin, 255);
-          analogWrite(GREENPin, LOW);
-          analogWrite(BLUEPin, LOW);
+          digitalWrite(REDPin, 255);
+          digitalWrite(GREENPin, LOW);
+          digitalWrite(BLUEPin, LOW);
         }
         else if(data == 1){
-          analogWrite(REDPin, 255);
-          analogWrite(GREENPin, 255);
-          analogWrite(BLUEPin, LOW);
+          digitalWrite(REDPin, 255);
+          digitalWrite(GREENPin, 255);
+          digitalWrite(BLUEPin, LOW);
         }
         else if(data == 2){ // status = present donc lumiere verte
-          analogWrite(GREENPin, 255);
-          analogWrite(REDPin, LOW);
-          analogWrite(BLUEPin, LOW);
+          digitalWrite(GREENPin, 255);
+          digitalWrite(REDPin, LOW);
+          digitalWrite(BLUEPin, LOW);
         }
         break;}
 
@@ -104,9 +103,9 @@ void requestEvent(){ // launched when master makes a read (request)
 }
 
 void shutDownRGBLED(){ // shut down rgb LED
-  analogWrite(REDPin, LOW);
-  analogWrite(GREENPin, LOW);
-  analogWrite(BLUEPin, LOW);
+  digitalWrite(REDPin, LOW);
+  digitalWrite(GREENPin, LOW);
+  digitalWrite(BLUEPin, LOW);
 }
 
 void print(String text,int data){
